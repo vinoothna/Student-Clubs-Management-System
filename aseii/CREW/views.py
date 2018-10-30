@@ -42,6 +42,7 @@ def student(request,s_id):
 	myposts_count = post.objects.filter(posted_by_id = usr).count()
 	notification_ids = list(notification_user.objects.filter(id = s_id, view_type = False).values_list('notification_id',flat=True))
 	notifications_to_show = notification.objects.filter(id__in = notification_ids).order_by('notification_datetime')
+	
 	dic = {
 			"user":usr ,
 			"clubs_remain":clubs_remain,
@@ -80,12 +81,13 @@ def Super_Admin(request,sa_id):
 
 def join(request):
 	if request.method == "POST":
-		clubName = request.POST.get('Club')
+		club_selected = request.POST.get('selected_club')
 		s_id = request.POST.get('s_id')
 		usr = user.objects.get(id = s_id)
-		Club = club.objects.get(club_name = clubName)
-		club_registered_member.objects.create(user_id = usr, club_id = Club, date_of_joining = datetime.now())
-		return redirect('student',s_id)
+		if club_selected!= "":
+			Club = club.objects.get(club_name = club_selected)
+			club_registered_member.objects.create(user_id = usr, club_id = Club)
+			return redirect('student',s_id)
 
 def create_post(request):
 	if request.method == "POST":
@@ -184,6 +186,7 @@ def conduct_poll(request):
 			option = request.POST.get(title_no)
 			poll_options.objects.create(poll_id = poll_created, option = option, image = image)
 		return redirect('Super_Admin',usr_id)
+
 
 
 		

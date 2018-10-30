@@ -45,7 +45,25 @@
         top: -7px;
         width: 24px;
       }
+      /* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
     </style>
   </head>
 
@@ -356,18 +374,35 @@
                     <div class="col-md-3 select_club" style="overflow-y: auto;">
                       <br>
                         {% for i in clubs_remain %}
-                          <a class="btn btn-light btn-block" id="{{i.club_name}}">
+                          <a class="btn btn-light btn-block club_option" id="{{i.club_name}}">
                             {{i.club_name}}
                           </a>
                         {% endfor %}
                       <br>
                     </div>
-                    <div class="col-md-9" style="border:2px solid yellow"> 
+                    <div class="col-md-9" style="overflow-y: auto;"> 
+                      {% for i in clubs_remain %}
+                        <div class="{{i.club_name}} about_club" id="{{i.club_name}}" style="display:none;" style="height:60vh;padding:20px;">
+                          <center>
+                          {% if i.club_logo %}
+                          <img src="{{i.club_logo.url}}" id="club_logo" style="height:95px;width:95px;border-radius: 12px;box-shadow: 0 3px 10px rgba(0,0,0,0.7);margin-top: 10px;">
+                          {% else %}
+                          <img src="" id="club_logo" style="height:95px;width:95px;border-radius: 25%;box-shadow: 0 0 5px rgba(0,0,0,0.5)">
+                          {% endif %}
+                          <br><br>
+                          <h4>About the club:</h4>
+                          <p style="text-align: justify;text-justify: inter-word;padding:20px">{{i.club_description}}</p>
+                          <a href="{{i.club_tc.url}}" target="_blank">Terms & Conditions</a><br><br>
+                          <input type="radio" class="agree" name="radio" value="agree">&nbsp;I agree &nbsp;
+                          <input type="radio" class="disagree" name="radio" value="disagree">&nbsp;I don't agree<br>
+                          </center>
+                        </div>
+                      {% endfor %}
                     </div>
                   </div>
                   <br>
                   <input type="number" name="s_id" value="{{user.id}}" style="display:none">
-                  <input type="text" name="s_id" value="{{user.id}}" style="display:none">
+                  <input type="text" id="selected_club" name="selected_club" value="" style="display:none">
                   <div class="modal-footer">
                     <input type="submit" value="Join" class="btn btn-success btn-block">
                   </div>
@@ -417,7 +452,7 @@
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
       <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
-
+      
       <script>
         // Get the current year for the copyright
         $('#year').text(new Date().getFullYear());
@@ -425,8 +460,20 @@
         $('.close').click(function(){
           var $target = $(this).parents('.card');
           $target.hide('slow', function(){ $target.remove(); });
-          
         });
+        
+        $('.club_option').click(function(){
+          var cls = '.'+this.id;
+          $('.about_club').css("display","none");
+          $(cls).css("display","block");
+        });
+
+        $('input[type="radio"]').click(function(){
+            selected_club = $(this).closest('div').attr('id');
+            $('#selected_club').val(selected_club);
+            
+        });
+        
 
       </script>
 
