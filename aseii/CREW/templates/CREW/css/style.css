@@ -1,0 +1,14 @@
+.flash_card
+{
+    height:130px;
+    width:150px;
+}
+
+footer
+{
+    position:fixed;
+    bottom:0px;
+    width:100%;
+    height:30px;
+    z-index:1;
+}
