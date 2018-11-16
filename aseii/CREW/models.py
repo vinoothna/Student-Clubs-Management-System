@@ -9,7 +9,8 @@ class user(models.Model):
 	user_type = models.CharField(max_length=30)
 	user_role = models.CharField(max_length=30)
 	user_password = models.CharField(max_length=30)
-	user_dp = models.ImageField(blank=True,null=True)
+	user_bio = models.TextField(default="user_bior")
+	user_dp = models.ImageField(upload_to="users_profile_images",blank=True,null=True)
 	def __str__(self):
 		return str(self.id)+' '+self.user_name
 
@@ -34,13 +35,14 @@ class club_registered_member(models.Model):
 	club_id = models.ForeignKey(club,on_delete=models.CASCADE)
 	date_of_joining = models.DateTimeField(default=timezone.now, blank=True)
 
-class rooms(models.Model):
+class room(models.Model):
 	timestamp = models.DateTimeField(default=timezone.now, blank=True)
 	room_num = models.IntegerField(default=0)
 	room_capacity =  models.IntegerField(default=1)
 	def __str__(self):
-		return "Room No: " + str(self.room_num)
+		return "Room No - " + str(self.room_num)
 
+		
 class event(models.Model):
 	event_name = models.CharField(max_length=30)
 	event_start_datetime = models.DateTimeField(default=timezone.now, blank=True)
@@ -49,11 +51,20 @@ class event(models.Model):
 	event_duration = models.IntegerField(default=0)
 	event_host = models.CharField(max_length=30)
 	event_limit = models.IntegerField(default=0)
+	event_fill_status = models.IntegerField(default=0)
 	organizer_id = models.ForeignKey(user,on_delete=models.CASCADE)
-	event_venue = models.ForeignKey(rooms,on_delete=models.CASCADE) # CHECK THIS #
+	club_id = models.ForeignKey(club,on_delete=models.CASCADE)
+	event_venue = models.ForeignKey(room,on_delete=models.CASCADE) # CHECK THIS #
 	
 	def __str__(self):
-		return str(self.id) + self.event_name
+		return str(self.id)+" " + self.event_name
+
+class event_registered_user(models.Model):
+	user_id = models.ForeignKey(user,on_delete=models.CASCADE)
+	event_id = models.ForeignKey(event,on_delete=models.CASCADE)
+	register_datetime = models.DateTimeField(default=timezone.now, blank=True)
+	def __str__(self):
+		return "Event : " + str(self.event_id) + " User :"+ str(self.user_id)
 
 class event_media(models.Model):
 	event_id = models.ForeignKey(event,on_delete=models.CASCADE)
@@ -70,13 +81,14 @@ class notification(models.Model):
 		return "Notif :" + str(self.id)
 
 class post(models.Model):
+	post_title = models.CharField(max_length = 50)
 	club_id = models.ForeignKey(club,on_delete=models.CASCADE)
 	posted_by_id = models.ForeignKey(user,on_delete=models.CASCADE)
 	content = models.TextField()
 	post_datetime = models.DateTimeField(default=timezone.now, blank=True)
 	def __str__(self):
-		return "Post :" + str(self.id)
-
+		return "Post :" + str(self.id) + ' ' + self.post_title
+ 
 class post_media(models.Model):
 	post_id = models.ForeignKey(post,on_delete=models.CASCADE)
 	post_type = models.CharField(max_length=30)
@@ -98,13 +110,6 @@ class likes(models.Model):
 	like_type = models.CharField(max_length=30)
 	def __str__(self):
 		return "Post: " + str(self.post_id) + self.like_type +"d by" + str(self.liked_user_id) 
-
-class event_registered_user(models.Model):
-	user_id = models.ForeignKey(user,on_delete=models.CASCADE)
-	event_id = models.ForeignKey(event,on_delete=models.CASCADE)
-	register_datetime = models.DateTimeField(default=timezone.now, blank=True)
-	def __str__(self):
-		return "Event : " + str(self.event_id) + " User :"+ str(self.user_id)
 
 class poll(models.Model):
 	poll_title = models.CharField(max_length=50)

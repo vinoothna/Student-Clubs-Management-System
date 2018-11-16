@@ -16,7 +16,7 @@
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
-      <a href="student_index.html" class="navbar-brand">
+      <a href="/student/{{stud}}" class="navbar-brand">
         <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -25,17 +25,17 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="student_index.html" class="nav-link">
+            <a href="/student/{{stud}}" class="nav-link">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
           <li class="nav-item">
-            <a href="profile_student.html" class="nav-link">
+            <a href="/student_profile/{{stud}}" class="nav-link">
               <i class="fas fa-user"></i> Profile
             </a>
           </li>
           <li class="nav-item">
-            <a href="login.html" class="nav-link">
+            <a href="/" class="nav-link">
               <i class="fas fa-user-times"></i> Logout
             </a>
           </li>
@@ -60,18 +60,18 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <a href="student_index.html" class="btn btn-light btn-block">
+          <a href="/student/{{stud}}" class="btn btn-light btn-block">
             <i class="fas fa-arrow-left"></i> Back To Dashboard
           </a>
         </div>
-        <div class="col-md-6 ml-auto">
+        <!-- <div class="col-md-6 ml-auto">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Search Posts...">
             <div class="input-group-append">
               <button class="btn btn-primary">Search</button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
@@ -90,68 +90,33 @@
                 <tr>
                   <th>#</th>
                   <th>Title</th>
-                  <th>Category</th>
+                  <th>Club Name</th>
                   <th>Date</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Post One</td>
-                  <td>Web Development</td>
-                  <td>May 10 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
+                {% for i in UserPosts %}
+                  {% for j in clubs %}
+                     {% if i.club_id.id == j.id %} 
+                        <tr>
+                          
+                          <td>{{i.id}}</td>
+                          <td>{{i.post_title}}</td>
+                          <td>{{j.club_name}}</td>
+                          <td>{{i.post_datetime}}</td>
+                          <td>
+                             <a href="/Details/{{stud}}/{{i.id}}" class="btn btn-secondary" style="background-color: #007bff">
+                            <input type = "button" class="btn btn-primary btn-block" value="Details" name = "Details" "></td>
+                            </a>
+                        </tr>
+                     {% endif %}
+                  {% endfor %}
+                {% endfor %}
+                   
                   </td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Post Two</td>
-                  <td>Tech Gadgets</td>
-                  <td>May 11 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Post Three</td>
-                  <td>Web Development</td>
-                  <td>May 13 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>Post Four</td>
-                  <td>Business</td>
-                  <td>May 15 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>Post Five</td>
-                  <td>Web Development</td>
-                  <td>May 17 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
+               <!--  <tr>
                   <td>6</td>
                   <td>Post Six</td>
                   <td>Health & Wellness</td>
@@ -161,12 +126,12 @@
                       <i class="fas fa-angle-double-right"></i> Details
                     </a>
                   </td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
 
             <!-- PAGINATION -->
-            <nav class="ml-4">
+            <!-- <nav class="ml-4">
               <ul class="pagination">
                 <li class="page-item disabled">
                   <a href="#" class="page-link">Previous</a>
@@ -184,7 +149,7 @@
                   <a href="#" class="page-link">Next</a>
                 </li>
               </ul>
-            </nav>
+            </nav> -->
           </div>
         </div>
       </div>
@@ -205,6 +170,34 @@
       </div>
     </div>
   </footer>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form method="POST" action="/edit_profile_pic">
+          {% csrf_token %}
+          <input type="hidden" name="s_id" value='{{ student_data.id }}'>
+          <input type="file" name="pic">
+          <!-- <input type="submit" class="btn btn-success" value="submit"> -->
+        
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" class="btn btn-secondary" >submit</button>
+      </div>
+      </form>
+      <!--  -->
+    </div>
+  </div>
+</div>
+
 
   <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>

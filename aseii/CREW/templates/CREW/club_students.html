@@ -14,28 +14,34 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2">
     <div class="container">
-      <a href="CA_index.html" class="navbar-brand">
+      <a href="/student/{{user.id}}" class="navbar-brand">
         <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
+        
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="CA_index.html" class="nav-link">
+            <a href="/student/{{user.id}}" class="nav-link">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
           <li class="nav-item">
-            <a href="profile_admin.html" class="nav-link">
+           <!--<form action="" style="display: inline;" method="POST">
+                    {% csrf_token %}
+                    <input type="text" value="{{user.id}}" style="display:none" name="s_id">
+                    <button type="submit" style="text-decoration: none; color: rgba(255,255,255,.5);" class="btn btn-link"><i class="fas fa-user" style="color: rgba(255,255,255,.5);"></i>Profile</button>
+              </form>-->
+            <a href="/student_profile/{{user.id}}" class="nav-link">
               <i class="fas fa-user"></i> Profile
             </a>
           </li>
           <li class="nav-item">
-            <a href="login.html" class="nav-link">
+            <a href="/" class="nav-link">
               <i class="fas fa-user-times"></i> Logout
             </a>
           </li>
