@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+      crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+      crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
+    <title>A11 Frontend</title>
+    <style>
+      #ringing_bell
+      {
+        animation: moveIt 2.5s ease-in-out infinite;
+        display:inline-block;
+      }
+      @keyframes moveIt {
+        0%, 100% {
+          transform: rotate(45deg);
+        }
+        50% {
+          transform: rotate(-45deg);
+        }
+      }
+      #join_club_modal {
+        max-width: 80% !important;
+      }
+      #no_notif
+      {
+        background-color: #c75858;
+        border-radius: 24px;
+        box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, .3);
+        color: #fff;
+        cursor: default;
+        font-size: 13px;
+        height: 24px;
+        line-height: 24px;
+        position: absolute;
+        right: 4px;
+        text-align: center;
+        top: -7px;
+        width: 24px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    
+    <!-- HEADER -->
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2">
+        <div class="container">
+          <a href="student_index.html" class="navbar-brand">
+            <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
+          </a>
+          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a href="student_index.html" class="nav-link">
+                  <i class="fas fa-home"></i> Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="profile_student.html" class="nav-link">
+                  <i class="fas fa-user"></i> Profile
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="login.html" class="nav-link">
+                  <i class="fas fa-user-times"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <header id="main-header" class="py-2 bg-dark text-white">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <i> Hi {{user.user_name}}</i>
+            </div>
+          </div>
+        </div>
+      </header>
+
+    <!-- ACTIONS -->
+      <section id="actions" class="py-4 mb-4 bg-dark fixed-top" style="margin-top:90px">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-2">
+              <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#joinClubModal">
+                 Join a Club
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="#" class="btn btn-warning btn-block" data-toggle="modal" data-target="#leaveClubModal">
+                 Leave a Club
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="#" class="btn btn-info btn-block" data-toggle="modal" data-target="#registerEventModal">
+                 Register for Event
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#addPostModal">
+                Upload Post
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="#" class="btn btn-light btn-block" data-toggle="modal" data-target="#notificationModal" id="NotifButton">
+                {% if notif_no != 0 %}  
+                  <i class="fas fa-bell" id="ringing_bell"></i>
+                  <span id="no_notif">
+                    {{notif_no}}
+                  </span>
+                {% else %}
+                  <i class="fas fa-bell" id="bell"></i>
+                {% endif %}&nbsp;Notifications
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- POSTS -->
+      <section id="posts" style="margin-top:110px">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9"  style="background-color: rgba(0,0,0,0.1)">
+              <div class="card">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card text-center bg-primary text-white mb-3 flash_card">
+                <div class="card-body">
+                  <h5>Clubs In</h5>
+                  <h4 class="display-6">
+                    <i class="fas fa-users"></i> {{clubs_no}}
+                  </h4>
+                    
+                    <form action="{% url 'clubs_joined' %}" method="POST">
+                      {% csrf_token %}    
+                      <input type="text" value="{{user.id}}" style="display:none" name="s_id">
+                      <input type="submit" value="View" class="btn btn-outline-light btn-sm">
+                    </form>
+                  
+                </div>
+              </div>
+
+              <div class="card text-center bg-success text-white mb-3 flash_card">
+                <div class="card-body">
+                  <h5>My Events</h5>
+                  <h4 class="display-6">
+                    <i class="fas fa-folder"></i> 4
+                  </h4>
+                  <a href="events_student.html" class="btn btn-outline-light btn-sm">View</a>
+                </div>
+              </div>
+
+              <div class="card text-center bg-warning text-white mb-3 flash_card">
+                <div class="card-body">
+                  <h5>My Posts</h5>
+                  <h4 class="display-6">
+                    <i class="fas fa-pencil-alt"></i> {{myposts_count}}
+                  </h4>
+                  <a href="posts_student.html" class="btn btn-outline-light btn-sm">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- FOOTER -->
+      <footer id="main-footer" class="bg-dark text-white mt-5 p-1 fixed-bottom">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h6 class="text-center">
+                Copyright &copy;
+                <span id="year"></span>
+                Student Club Management System
+              </h6>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    <!-- MODALS -->
+
+      <!-- ADD POST MODAL -->
+        <div class="modal fade" id="addPostModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Upload Post</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                {% csrf_token %}
+                <form action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data"> 
+                  <div class="form-group">
+                    <label for="title" >Title</label>
+                    <input type="text" name='post_title' class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="category">Club</label>
+                    {% csrf_token %}
+                    <select class="form-control" name="Club">
+                      {% for i in clubs_joined %}
+                        {% for j in clubs %}
+                          {% if i == j.id %}
+                            <option value="{{j.club_name}}">{{j.club_name}}</option>
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Choose File</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="image" name="File" multiple>
+                      <label for="image" class="custom-file-label">--File--</label>
+                    </div>
+                    <small class="form-text text-muted">Max Size 3mb</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="body">Content</label>
+                    <textarea name="content" class="form-control"></textarea>
+                  </div>
+                  <input type="number" value="{{user.id}}" style="display:none" name="s_id">
+                  <input type="submit" value="Post" class="btn btn-danger btn-block">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- LEAVE CLUB MODAL -->
+        <div class="modal fade" id="leaveClubModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Leave a Club</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="category">Club</label>
+                    <select class="form-control">
+                      <option value="">Adventure</option>
+                      <option value="">Dance</option>
+                      <option value="">Film Making</option>
+                      <option value="">Music</option>
+                      <option value="">Photography</option>
+                      <option value="">Programming</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <textarea class="form-control" rows="5" id="comment" placeholder="Can you tell us the reason?(optional)"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-warning"  data-dismiss="modal">Leave</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- REGISTER FOR EVENT MODAL -->
+        <div class="modal fade" id="registerEventModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Register for an Event</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="category">Events</label>
+                    <select class="form-control">
+                      <option value="">Event-1</option>
+                      <option value="">Event-2</option>
+                      <option value="">Event-3</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-info" data-target="#eventDescriptionModal" data-toggle="modal" data-dismiss="modal">Select</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- JOIN CLUB MODAL -->
+        <div class="modal fade" id="joinClubModal">
+          <div class="modal-dialog modal-lg" id="join_club_modal">
+            <div class="modal-content" style="width:90%">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Join a Club</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="container-fluid row" style="height:60vh;position:relative">
+                  <div class="col-md-3 select_club" style="overflow-y: auto;">
+                    <br>
+                      <a class="btn btn-light btn-block">
+                        Adventure Club
+                      </a>
+                    <br>
+                  </div>
+                  <div class="col-md-9" style="border:2px solid yellow">   
+                  </div>
+
+                </div>
+                <br>
+                <div class="modal-footer">
+                  <button class="btn btn-info" data-dismiss="modal">Register</button>
+                </div>
+
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+      <!-- NOTIFICATION MODAL -->
+        <div class="modal fade" id="notificationModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Notifications</h5>
+               
+                <form action="{% url 'notifications_seen' %}" method="POST" >
+                  {% csrf_token %}
+                  <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                  <input type="submit" class="close" value="&times;">
+                </form>
+              </div>
+                
+              <div class="modal-body">
+                {% for notif in notifications %}
+                  <div class="card">
+                    <div class="card-body">
+                      <button class="close">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                      <h4 class="card-title">{{notif.notification_content}}</h4>
+                      <p class="card-text">{{notif.notification_datetime}}</p>
+                    </div>
+                  </div>
+                  <br>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+    <!--  JAVASCRIPT/ JQUERY -->
+      <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+
+      <script>
+        // Get the current year for the copyright
+        $('#year').text(new Date().getFullYear());
+        
+        $('.close').click(function(){
+          var $target = $(this).parents('.card');
+          $target.hide('slow', function(){ $target.remove(); });
+          
+        });
+
+      </script>
+
+  </body>
+
+</html>

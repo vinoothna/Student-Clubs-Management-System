@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
+  <title>A11 Frontend</title>
+  <style type="text/css">
+    .col-md-252
+    {
+      margin-right: 20px;
+      width:150px;
+    }
+   #join_club_modal {
+        max-width: 80% !important;
+      }
+      select {
+      font-family: 'FontAwesome', 'Second Font name';
+    }
+    .upload-btn-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      
+    }
+    .upload-btn-wrapper input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
+     #overlay {
+            position: fixed;
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index:3;
+            cursor: pointer;
+        }
+        .carousel-inner > .carousel-item > img {
+          width : 500px;
+          height : 500px;
+          margin-top: 10%;
+        }
+        #close_button{
+          top: 20px;
+          right: 10px;
+          position: fixed;
+          z-index: 3;
+        }
+        
+  </style>
+</head>
+
+<body>
+  
+  <!-- TOP NAV -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
+      <div class="container">
+        <a href="/Club_Admin/{{user.id}}" class="navbar-brand">
+          <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/49/IIIT_Sri_City_Logo.png/220px-IIIT_Sri_City_Logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
+        </a>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a href="/Club_Admin/{{user.id}}" class="nav-link">
+                <i class="fas fa-home"></i> Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/club_admin_profile/{{user.id}}" class="nav-link">
+                <i class="fas fa-user"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/" class="nav-link">
+                <i class="fas fa-user-times"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  <!-- HEADER -->
+    <header id="main-header" class="py-2 bg-dark text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h1>
+              <i> Hi {{user.user_name}} </i>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+  <!-- ACTIONS -->
+    <section id="actions" class="py-4 mb-4 bg-dark fixed-top" style="margin-top:75px;z-index: 0;">
+      <div class="container-fluid" style="margin-left:170px">
+        <div class="row">
+          <div class="row">
+            <div class="col-md-252">
+              <a href="#" class="btn btn-info btn-block" data-toggle="modal" data-target="#joinClubModal">
+                Join a Club
+              </a>
+            </div>
+            <div class="col-md-252">
+              <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#leaveClubModal" style="color: white">
+                Leave a Club
+              </a>
+            </div>
+            <div class="col-md-252">
+              <a href="#" class="btn btn-block" data-toggle="modal" data-target="#registerEventModal" style="background-color: purple;color: white">
+                Register for event
+              </a>
+            </div>
+            <div class="col-md-252">
+              <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#orgEventModal">
+                Organize Events
+              </a>
+            </div>
+            <div class="col-md-252 text-white">
+              <a href="#" class="btn btn-warning btn-block" data-toggle="modal" data-target="#conductPollModal">
+                Conduct Polls
+              </a>
+            </div>
+            <div class="col-md-252">
+              <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#showEventsModal">
+                Show Events
+              </a>
+            </div>
+            <div class="col-md-252">
+              <a href="#" class="btn btn-light btn-block" data-toggle="modal" data-target="#notificationModal">
+                <i class="fas fa-bell"></i> &nbsp;Notifications
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  <!-- POSTS -->
+    <section id="posts" style="margin-top:110px">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-9"  style="background-color: rgba(0,0,0,0.1)">
+            <h1>Events</h1>
+            {% for event in events %}
+  				<h4>{{event}}</h4> 
+			{% endfor %}
+            
+          </div>
+          <div class="col-md-3">
+            <div class="card text-center bg-primary text-white mb-3 flash_card" >
+              <div class="card-body">
+                <h5>Students</h5>
+                <h4 class="display-6">
+                  <i class="fas fa-users"></i>&nbsp;
+                </h4>
+                <a href="club_students.html" class="btn btn-outline-light btn-sm">View</a>
+              </div>
+            </div>
+
+            <div class="card text-center bg-success text-white mb-3 flash_card">
+              <div class="card-body">
+                <h5>Events organized</h5>
+                <h4 class="display-6">
+                  <i class="fas fa-folder"></i>&nbsp;
+                </h4>
+                <a href="events_admin.html" class="btn btn-outline-light btn-sm">View</a>
+              </div>
+            </div>
+
+            <div class="card text-center bg-warning text-white mb-3 flash_card">
+              <div class="card-body">
+                <h5>My Posts</h5>
+                <h4 class="display-6">
+                  <i class="fas fa-pencil-alt"></i>&nbsp;
+                </h4>
+                <a href="posts_admin.html" class="btn btn-outline-light btn-sm">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  <!-- FOOTER -->
+    <footer id="main-footer" class="bg-dark text-white mt-5 p-1 fixed-bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h6 class="text-center">
+              Copyright &copy;
+              <span id="year"></span>
+              Student Club Management System
+            </h6>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  <!-- MODALS -->
+    
+      <!-- ADD POST MODAL -->
+        <div class="modal fade" id="addPostModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Upload Post</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                {% csrf_token %}
+                <form action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data"> 
+                  <div class="form-group">
+                    <label for="title" >Title</label>
+                    <input type="text" name='post_title' class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="category">Club</label>
+                    {% csrf_token %}
+                    <select class="form-control" name="Club">
+                      {% for i in clubs_joined %}
+                        {% for j in clubs %}
+                          {% if i == j.id %}
+                            <option value="{{j.club_name}}">{{j.club_name}}</option>
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Choose File</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="image" name="File" multiple>
+                      <label for="image" class="custom-file-label">--File--</label>
+                    </div>
+                    <small class="form-text text-muted">Max Size 3mb</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="body">Content</label>
+                    <textarea name="content" class="form-control"></textarea>
+                  </div>
+                  <input type="number" value="{{user.id}}" style="display:none" name="ca_id">
+                  <input type="submit" value="Post" class="btn btn-danger btn-block">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      <!-- LEAVE CLUB MODAL -->
+        <div class="modal fade" id="leaveClubModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Leave a Club</h5>
+                  <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  {% if clubs_joined   %}
+                    <form action="{% url 'leave_club' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="category">Club</label>
+                      <select class="form-control" name = "club_left" required>
+                        {% for i in clubs_joined %}
+                          {% for j in clubs %}
+                            {% if i == j.id %}
+                              <option value="{{j.club_name}}">{{j.club_name}}</option>
+                            {% endif %}
+                          {% endfor %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" name="reason" rows="5" id="comment" placeholder="Can you tell us the reason?(optional)"></textarea>
+                    </div>
+
+                    {% else %}
+                    Please join any club
+                  {% endif %}
+                  
+                </div>
+                
+                {% if clubs_joined %}
+                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                  <div class="modal-footer">
+                     <input class="btn btn-warning" value="Leave" type="submit">
+                  </div>
+                {% endif %}
+                </form>
+              </div>
+            </div>
+        </div>
+
+      <!-- REGISTER FOR EVENT MODAL -->
+        <div class="modal fade" id="registerEventModal">
+          <div class="modal-dialog modal-lg" id="join_club_modal">
+            <div class="modal-content" style="width:90%">
+              <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Register for an event</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'register_event' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="container-fluid row" style="height:60vh;position:relative">
+                    <div class="col-md-3 select_club" style="overflow-y: auto;">
+                      <br>
+                        {% for i in events %}
+                          <a class="btn btn-light btn-block event_option" id="{{i.event_name}}">
+                            {{i.event_name}}
+                          </a>
+                        {% endfor %}
+                      <br>
+                    </div>
+                    <div class="col-md-9" style="overflow-y: auto;">  
+                      {% for i in events %}
+                        {% for j in events_media %}
+                          {% if i.id == j.event_id.id %}
+                            <div class="container-fluid row {{i.event_name}} about_event" style="height:60vh;display:none;">
+                                <div class="col-md-5" style="float:left;background-image: url('{{j.media.url}}');background-size: contain;box-shadow: 0 2px 15px rgba(0,0,0,0.6);border-radius: 12px;height:60vh;">
+                                </div>
+                                <div class="col-md-7" style="float:right;padding-left: 80px;">
+                                  <br><br><br><br>
+                                  <p><i class="fas fa-calendar-alt"></i>&nbsp; {{i.event_start_datetime}} - {{i.event_end_datetime}}</p>
+                                  <p><b>Organizer :</b> {{i.club_id.club_name}} Club</p>
+                                  <P><b>Event type :</b> {{i.event_type}}</p>
+                                  <p><b>Limit :</b> {{i.event_limit}}</p>
+                                  <p><b>Registered :</b> {{i.event_fill_status}}</p>
+                                  <p><b>Venue :</b> {{i.event_venue}}</p>
+                                </div>
+                              </div>
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <br>
+                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                  <input type="text" id="selected_event" name="selected_event" value="" style="display:none">
+                  <div class="modal-footer">
+                    <input type="submit" value="Register" class="btn btn-info btn-block">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- JOIN CLUB MODAL -->
+        <div class="modal fade" id="joinClubModal">
+          <div class="modal-dialog modal-lg" id="join_club_modal">
+            <div class="modal-content" style="width:90%">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Join a Club</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'join' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="container-fluid row" style="height:62vh;position:relative">
+                    <div class="col-md-3 select_club" style="overflow-y: auto;">
+                      <br>
+                        {% for i in clubs_remain %}
+                          <a class="btn btn-light btn-block club_option" id="{{i.club_name}}">
+                            {{i.club_name}}
+                          </a>
+                        {% endfor %}
+                      <br>
+                    </div>
+                    <div class="col-md-9" style="overflow-y: auto;"> 
+                      {% for i in clubs_remain %}
+                        <div class="{{i.club_name}} about_club" id="{{i.club_name}}" style="display:none;" style="height:60vh;padding:20px;">
+                          <center>
+                          {% if i.club_logo %}
+                          <img src="{{i.club_logo.url}}" id="club_logo" style="height:95px;width:95px;border-radius: 12px;box-shadow: 0 3px 10px rgba(0,0,0,0.7);margin-top: 10px;">
+                          {% else %}
+                          <img src="" id="club_logo" style="height:95px;width:95px;border-radius: 25%;box-shadow: 0 0 5px rgba(0,0,0,0.5)">
+                          {% endif %}
+                          <br><br>
+                          <h4>About the club:</h4>
+                          <p style="text-align: justify;text-justify: inter-word;padding:20px">{{i.club_description}}</p>
+                          <a href="{{i.club_tc.url}}" target="_blank">Terms & Conditions</a><br><br>
+                          <input type="radio" class="agree" name="radio" value="agree">&nbsp;I agree &nbsp;
+                          <input type="radio" class="disagree" name="radio" value="disagree">&nbsp;I don't agree<br>
+                          </center>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <br>
+                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                  <input type="text" id="selected_club" name="selected_club" value="" style="display:none">
+                  <div class="modal-footer">
+                    <input type="submit" value="Join" class="btn btn-success btn-block">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- SHOW EVENTS MODAL -->
+        <div class="modal fade" id="showEventsModal">
+          <div class="modal-dialog modal-lg" id="show_events_modal">
+            <div class="modal-content" style="width:90%">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Show Events</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'show_events' %}" method="POST">
+                  {% csrf_token %}
+                  Start-date : <input type="date" name="start_date">
+                  End-date   : <input type="date" name="end_date">
+                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                  <div class="modal-footer">
+                    <input type="submit" value="showEvents" class="btn btn-success btn-block">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!-- NOTIFICATION MODAL -->
+        <div class="modal fade" id="notificationModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Notifications</h5>
+               
+                <form action="{% url 'notifications_seen' %}" method="POST" >
+                  {% csrf_token %}
+                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                  <input type="submit" class="close" value="&times;">
+                </form>
+              </div>
+                
+              <div class="modal-body">
+                <h5> New </h5>
+                <hr>
+                <br>
+                {% for notif in new_notifications %}
+                  <div class="card">
+                    <div class="card-body">
+                      <button class="close">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                      <h5 class="card-title">{{notif.notification_content}}</h5>
+                      <p class="card-text">{{notif.notification_datetime}}</p>
+                    </div>
+                  </div>
+                  <br>
+                {% endfor %}
+                <h5> Earlier </h5>
+                <hr>
+                {% for notif in old_notifications %}
+                  <div class="card">
+                    <div class="card-body">
+                      <button class="close">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                      <h5 class="card-title">{{notif.notification_content}}</h5>
+                      <p class="card-text">{{notif.notification_datetime}}</p>
+                    </div>
+                  </div>
+                  <br>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- CONDUCT POLL MODAL -->
+      <div class="modal fade" id="conductPollModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Conduct Poll</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'conduct_poll' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Title</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Enter the title" name="poll_title">
+                      </div>
+
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Description</span>
+                        </div>
+                        <textarea class="form-control" placeholder="Poll description" name="poll_description"></textarea>
+                      </div>
+
+
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Start DateTime</span>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="poll_start">
+                      </div>
+
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">End DateTime&nbsp;</span>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="poll_end">
+                      </div>
+
+                      <div class="input-group mb-3">
+                        <div class="container-fluid row" >
+                          <div class="col-md-10 options_space" >
+                            
+                            <div class="input-group mb-3 option" id="option1">
+                              <input type="text" class="form-control" name="opt1_title" placeholder="opt1_title">
+                              <div class="upload-btn-wrapper btn btn-warning">
+                                <i class="far fa-image"></i>
+                                
+                                  <input type="file" id="image" name="opt1_img">
+                                
+                              </div>
+                            </div>
+                          
+                          </div>
+                          <div class="col-md-2">   
+                            <select class="form-control" name="pollOption_type" style="width:120px;">
+                              <option value="Multiple">Checkbox</option>
+                              <option value="Single">Radiobtn</option>
+                            </select>
+                            <a class="btn btn-light" id="add_poll_option">
+                              <i class="fas fa-plus"></i>
+                            </a>
+                            <a class="btn btn-light" id="remove_poll_option">
+                              <i class="fas fa-minus"></i>
+                            </a>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <input type="submit" class="btn btn-warning" value="Conduct">
+                    </div>
+                    <input type="number" name="no_of_options" style="display:none;" value="1" id="no_of_options">
+                    <input type="number" name="ca_id" style="display:none;" value="{{user.id}}">
+                </form>
+                
+              </div>
+              
+            </div>
+          </div>
+        </div>
+  
+      <!-- ORGANIZE EVENT MODAL -->
+        <div class="modal fade" id="orgEventModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Organize Event</h5>
+                <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="/organize/" method="POST">
+                  {% csrf_token %}
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" >Title</span>
+                    </div>
+                    <input type="text" class="form-control" name="event_title" placeholder="Enter the title">
+                  </div>
+                  <div class="form-group">
+                    <textarea class="form-control" placeholder="Description" name="event_description"></textarea>
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Start DateTime</span>
+                    </div>
+                    <input type="datetime-local" class="form-control" name="start_datetime">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">End DateTime&nbsp;</span>
+                    </div>
+                    <input type="datetime-local" class="form-control" name="end_datetime">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Room No.&nbsp;</span>
+                    </div>
+                    <select class="form-control" name="room">
+                      <option value="101">101</option>
+                      <option value="102">103</option>
+                      <option value="105">105</option>
+                      <option value="107">107</option>
+                      <option value="113">113</option>
+                      <option value="115">115</option>
+                    </select>
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Type&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="type">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Limit&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="limit">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Duration&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="duration">
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Choose File</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="image" name="event_media">
+                      <label for="image" class="custom-file-label">--File--</label>
+                    </div>
+                    <small class="form-text text-muted">Max Size 3mb</small>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="submit" class="btn btn-success"  data-toggle="modal" value='Organize'>
+                   </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+
+  <script>
+    
+    // Add options to the polls 
+    $('#add_poll_option').click(function(){
+      var id = ($('.option').length + 1).toString();
+      $('.options_space').append('<div class="input-group mb-3 option" id="option'+id+'"><input type="text" class="form-control" name="opt'+id+'_title" placeholder="option'+id+'"><div class="upload-btn-wrapper btn btn-warning"><i class="far fa-image"></i><input type="file" name="opt'+id+'_img" ></div></div>');
+      $('#no_of_options').val(id);
+    });
+
+    // Remove Options
+    $('#remove_poll_option').click(function(){
+      var id = ($('.option').length).toString();
+      var total_options = ($('.option').length - 1).toString(); 
+      $('#no_of_options').val(total_options);
+      $('#option'+id).remove();
+    });
+    // Get the current year for the copyright
+    $('#year').text(new Date().getFullYear());
+    
+    $('.close').click(function(){
+      var $target = $(this).parents('.card');
+      $target.hide('slow', function(){ $target.remove(); });
+    })
+    function on(){
+          document.getElementById("overlay").style.display = "block";
+        }
+
+        function off(){
+          document.getElementById("overlay").style.display = "none";
+        }
+
+    $('.club_option').click(function(){
+          var cls = '.'+this.id;
+          $('.about_club').css("display","none");
+          $(cls).css("display","block");
+        });
+
+        $('input[type="radio"]').click(function(){
+            selected_club = $(this).closest('div').attr('id');
+            $('#selected_club').val(selected_club);
+            
+        });
+        
+        $('.event_option').click(function(){
+          var cls = '.'+this.id;
+          $('.about_event').css("display","none");
+          $(cls).css("display","block");
+          $('#selected_event').val(this.id);
+        });
+  </script>
+</body>
+
+</html>
+
