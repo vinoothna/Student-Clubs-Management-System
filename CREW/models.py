@@ -45,7 +45,6 @@ class room(models.Model):
 	def __str__(self):
 		return "Room No - " + str(self.room_num)
 
-		
 class event(models.Model):
 	event_name = models.CharField(max_length=30)
 	event_start_datetime = models.DateTimeField(default=timezone.now, blank=True)

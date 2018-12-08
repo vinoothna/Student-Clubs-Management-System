@@ -56,7 +56,6 @@ def dashboard(request,token):
 	else:
 		return render(request,'CREW/login.html',{})
 	
-
 def auth_from_api(token):	
 	
 	url = " https://serene-wildwood-35121.herokuapp.com/oauth/getDetails"
@@ -95,15 +94,21 @@ def student(request,s_id):
 	
 	events_registered = list(event_registered_user.objects.filter(user_id = usr).values_list('event_id',flat=True))
 	events = event.objects.filter(club_id__in = list(clubs_joined)).exclude(event_fill_status=F('event_limit'))
-	events = events.exclude(id__in = events_registered )
+	events = events.exclude(id__in = events_registered)
 	event_ids = list(events.values_list('id',flat=True))
 	events_media = event_media.objects.filter(event_id__in = event_ids)
 
-	
-	polls = poll.objects.all()
+	#select polls only of those clubs user is in and also from super admin
+	super_admin_id = list(user.objects.filter(user_type = "Super Admin").values_list('id',flat=True))
+	joinedClubs_admin_ids = list(club_admin.objects.filter(club_id__in = clubs_joined).values_list('user_id',flat=True))
+	posting_user_ids = joinedClubs_admin_ids + super_admin_id
+
+	polls_participated = list(poll_participation.objects.filter(user_id = usr).values_list('poll_id',flat=True))
+	polls = poll.objects.filter(user_id__in = posting_user_ids)
+	polls = polls.exclude(id__in = polls_participated)
+	poll_ids = list(polls.values_list('id',flat=True))
 	no_of_polls = polls.count()
-	Poll_options = poll_options.objects.all()
-	print(Poll_options)
+	Poll_options = poll_options.objects.filter(poll_id__in = poll_ids)
 
 	dic = {
 			"user":usr ,
@@ -273,7 +278,6 @@ def leave_club(request):
 			leave_club_log.objects.create(user_id = usr, club_id=clubdata, reason = reason_obtained)
 			return redirect('Club_Admin',ca_id)
 
-
 def create_post(request):
 	if request.method == "POST":
 		if request.POST.get('s_id'):
@@ -368,7 +372,6 @@ def clubs_joined(request):
 					}
 			return render(request,'CREW/clubs_joined.html',dic)
 
-
 def add_club(request):
 	if request.method == "POST":
 		sa_id = request.POST.get('sa_id')
@@ -449,14 +452,17 @@ def conduct_poll(request):
 def participate_poll(request):
 	if request.method == "POST":
 		s_id = request.POST.get('s_id')
+		usr = user.objects.get(id = s_id)
 		poll_id = request.POST.get('poll_id')
 		Poll = poll.objects.get(id = poll_id)
 		Poll_options = request.POST.getlist('poll_'+str(poll_id))
+		print(Poll_options)
 		for option in Poll_options:
 			poll_option = poll_options.objects.get(poll_id = Poll, option = option)
-			print(poll_option)
 			poll_option.votes+=1
 			poll_option.save()
+			poll_participation.objects.create(poll_id = Poll , user_id = usr , option_id = poll_option)
+		
 		return redirect('student',s_id)
 		
 
@@ -535,7 +541,6 @@ def like(request):
 			likes.objects.create(post_id = Post, liked_user_id = usr , like_type = 'Like')
 			return redirect('Super_Admin',sa_id)
 
-
 def dislike(request):
 	if request.method == "POST":
 		if request.POST.get('s_id'):
@@ -573,8 +578,6 @@ def student_profile(request,s_id):
 			"student_data":student_data,
 		}
 	return render(request,"CREW/profile_student.html",context)	
-
-		
 
 def events_registered(request):
 	if request.method == "POST":
@@ -746,7 +749,6 @@ def EditDetails_admin(request):
 		# print("Hello")
 		return redirect('admin_profile',adminid)
 
-
 def DelImage_admin(request):
 	if request.method == "POST":
 		adminid = request.POST['sa_id']
@@ -809,23 +811,3 @@ def DelImage_club_admin(request):
 		club_admin_data.user_dp = None
 		club_admin_data.save()
 		return redirect('club_admin_profile',ca_id)
-
-def show_events(request):
-	if request.method == "POST":
-		ca_id = request.POST.get('ca_id')
-		start_date = str(request.POST.get('start_date'))
-		end_date = str(request.POST.get('end_date'))
-		events = event.objects.all()
-		lst = []
-		print("Start Date :" ,start_date)
-		print("End Date   :", end_date)
-		for Event in events:
-			if(start_date <= str(Event.event_start_datetime.date()) <= end_date):
-				lst.append(Event.event_name)
-		lst.sort(key=lambda x: x[1])
-		context = {
-				"events":lst,
-			}
-		
-		return render(request,'CREW/events.html',context)
-		

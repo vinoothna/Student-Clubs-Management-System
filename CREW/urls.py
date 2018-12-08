@@ -40,6 +40,5 @@ urlpatterns = [
     path('EditDetails_club_admin',views.EditDetails_club_admin,name='EditDetails_club_admin0.'),
     path('EditDP_club_admin',views.EditDP_club_admin,name='EditDP_club_admin'),
     path('DelImage_club_admin',views.DelImage_club_admin,name='DelImage_club_admin'),
-    path('show_events',views.show_events,name='show_events'),
 ]
 

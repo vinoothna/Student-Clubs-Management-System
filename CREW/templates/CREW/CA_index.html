@@ -103,19 +103,6 @@
       </div>
     </nav>
 
-  <!-- HEADER -->
-    <header id="main-header" class="py-2 bg-dark text-white">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <h1>
-              <i> Hi {{user.user_name}} </i>
-            </h1>
-          </div>
-        </div>
-      </div>
-    </header>
-
   <!-- ACTIONS -->
     <section id="actions" class="py-4 mb-4 bg-dark fixed-top" style="margin-top:75px;z-index: 0;">
       <div class="container-fluid" style="margin-left:170px">
@@ -147,11 +134,6 @@
               </a>
             </div>
             <div class="col-md-252">
-              <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#showEventsModal">
-                Show Events
-              </a>
-            </div>
-            <div class="col-md-252">
               <a href="#" class="btn btn-light btn-block" data-toggle="modal" data-target="#notificationModal">
                 <i class="fas fa-bell"></i> &nbsp;Notifications
               </a>
@@ -162,7 +144,7 @@
     </section>
 
   <!-- POSTS -->
-    <section id="posts" style="margin-top:110px">
+    <section id="posts" style="margin-top:175px">
       <div class="container">
         <div class="row">
           <div class="col-md-9"  style="background-color: rgba(0,0,0,0.1)">
@@ -514,30 +496,6 @@
           </div>
         </div>
 
-      <!-- SHOW EVENTS MODAL -->
-        <div class="modal fade" id="showEventsModal">
-          <div class="modal-dialog modal-lg" id="show_events_modal">
-            <div class="modal-content" style="width:90%">
-              <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Show Events</h5>
-                <button class="close" data-dismiss="modal">
-                  <span>&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form action="{% url 'show_events' %}" method="POST">
-                  {% csrf_token %}
-                  Start-date : <input type="date" name="start_date">
-                  End-date   : <input type="date" name="end_date">
-                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
-                  <div class="modal-footer">
-                    <input type="submit" value="showEvents" class="btn btn-success btn-block">
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
       <!-- NOTIFICATION MODAL -->
         <div class="modal fade" id="notificationModal">
           <div class="modal-dialog modal-lg">
