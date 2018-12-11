@@ -15,7 +15,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-    <title>A11 Frontend</title>
+    <title>CREWS@IIITS</title>
     <style>
       #ringing_bell
       {
@@ -49,25 +49,7 @@
         top: -7px;
         width: 24px;
       }
-      /* width */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        /* Track */
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-        }
-         
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            background: #888; 
-        }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555; 
-        }
+      
          #overlay {
             position: fixed;
             display: none;
@@ -81,27 +63,20 @@
             z-index:3;
             cursor: pointer;
         }
-        .carousel-inner > .carousel-item > img {
-          width : 500px;
-          height : 500px;
-          margin-top: 10%;
-        }
-        #close_button{
-          top: 20px;
-          right: 10px;
-          position: fixed;
-          z-index: 3;
-        }
         
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
     </style>
   </head>
 
   <body>
     
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
       <div class="container">
-        <a href="/student/{{user.id}}" class="navbar-brand">
-          <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/49/IIIT_Sri_City_Logo.png/220px-IIIT_Sri_City_Logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
+        <a href="/student/{{user.id}}" class="navbar-brand" style="font-size: 25px;">
+          <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
         </a>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
           <span class="navbar-toggler-icon"></span>
@@ -134,7 +109,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-2">
-              <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#joinClubModal">
+              <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#joinClubModal">
                  Join a Club
               </a>
             </div>
@@ -155,7 +130,7 @@
             </div>
 
             <div class="col-md-2">
-              <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#participatePollModal">
+              <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#participatePollModal">
                 {% if no_of_polls != 0 %}  
                   <span id="poll">
                     {{no_of_polls}}
@@ -181,72 +156,67 @@
       </section>
 
     <!-- POSTS -->
-      <section id="posts" style="margin-top:95px">
+      <section id="posts" style="margin-top:165px">
         <div class="container" >
-          <div class="row">
-            <div class="col-md-9"  style="background-color: rgba(0,0,0,0.1)">
-              <div class="card mt-4">
-                <div class="container" >
-                  <div class="row" style="overflow-y: auto;height: 426px;" >
+          <div class="row justify-content-center">
+            <!-- FEED -->
+              <div class="col-md-7" style="border:none;">
+                <div class="card mt-4" style="overflow-y: auto;height: 60vh;border:none;padding:10px;">
+                  <b><p><i>Post by others</i><p></b>
+                  {% if posts %}  
                     {% for i in posts %}
-                      <div class="col-lg-12">
-                        <div class="float-right">
-                          <a onclick="on()">
-                            <i class="fas fa-image" style="font-size: 36px;"></i>
-                          </a>
-                        </div>
-                        <img class="img-circle mt-2 rounded-circle" width="50" height="50" alt="" style="float: left;background-image: url('{{i.posted_by_id.user_dp.url}}');border-radius: 50%"><h5 class="mt-3">&nbsp;&nbsp;{{i.post_title}} <small>by {{i.posted_by_id.user_name}} on {{i.post_datetime}}</small></h5>                    
-                        <br>
+                      <div style="border-radius: 2px;margin-bottom: 15px;padding:20px;box-shadow: 0 0 20px rgba(0,0,0,0.2)">
+                        {% if i.posted_by_id.user_dp %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src = "{{i.posted_by_id.user_dp.url}}";>
+                        {% else %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="/media/avatar.png">
+                        {% endif %}
+                        <b><p style="margin-top: 1px;font-size: 18px;">{{i.posted_by_id.user_name}}<br><small>{{i.post_datetime}}</small></p></b>
+                        <hr>
+
+                        <b><p style="">{{i.post_title}}</p></b>
                         <p>{{i.content}}</p>
-                        <div id="overlay">                          
-                            <div id="demo" class="carousel slide" data-ride="carousel">  
-                                                      
-                                <div class="carousel-inner">
-                                  <div id="close_button">
-                                    <a onclick="off()">
-                                      <i class="fas fa-times" style="color: grey;font-size: 36px;"></i>
-                                    </a>
-                                  </div>
-                                  {% for j in posts_media %}
-                                      {% if i.id == j.post_id.id %}
-                                        <div class="carousel-item active">                         
-                                          <img class="d-block mx-auto" src="{{media_url}}{{j.media}}"  alt="">
-                                        </div>
-                                      {% endif %}
-                                  {% endfor %}
-                                </div>
-                                <a class="carousel-control-prev" href="#demo" data-slide="prev">
-                                  <span class="carousel-control-prev-icon"></span>
-                                </a>
-                                <a class="carousel-control-next" href="#demo" data-slide="next">
-                                  <span class="carousel-control-next-icon"></span>
-                                </a>
+                        
+                        <div style="width:40vw;max-height:400px;margin-bottom: 30px;display:inline-flex;flex-direction: row;overflow-x: auto;overflow-y: hidden;padding-bottom: 5px;">
+                          {% for j in posts_media %}
+                            {% if i.id == j.post_id.id %}
+                              <div>                         
+                                <img src="{{media_url}}{{j.media}}" style="width: 40vw;height: 330px">
                               </div>
-                        </div>  
+                            {% endif %}
+                          {% endfor %}
+                        </div>
                         
                         <form method="POST" action="{% url 'like' %}" style="display: inline-block;">
                           {% csrf_token %}
-                          <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                           <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
-                          <input type="submit" value="&#xf164" name="like" class="fas fa-thumbs-up" >                        
+                          <input type="submit" value="&#xf164" name="like" class="far fa-thumbs-up" id="like" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">  
                         </form>
+
                         <form method="POST" action="{% url 'dislike' %}" style="display: inline-block;">
                           {% csrf_token %}
-                          <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                           <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
-                          <input type="submit" value="&#xf165" name="like" class="fas fa-thumbs-down" >                        
+                          <input type="submit" value="&#xf165" name="like" class="far fa-thumbs-down" id="dislike" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">        
                         </form>
+
+                        <hr>
                         <form method="POST" action="{% url 'comments' %}">
                           {% csrf_token %}
                           <div class="input-group mt-2">
-                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content'>
+                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content' style="border-radius: 20px;">
                              <span class="input-group-btn">
-                                  <input class="btn btn-default" value="Comment" type="submit" >
-                                  <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                                  <!--<input class="btn btn-default" value="Comment" type="submit">-->
+                                  <button type="submit" style="background-color: transparent;border:none;transform: scale(1.6);margin: 5px;cursor: pointer;">
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                  </button>
+                                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                                   <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
                              </span>
                           </div>
                         </form>
+                        
                         <br>
                         {% for j in post_comments %} 
                           {% if i.id == j.post_id.id %}
@@ -260,57 +230,134 @@
                           {% endif %}  
                         {% endfor %}                  
                       </div>
-                      <div class="container">
-                        <div class="well well-sm col-lg-12" style="height:5px;width:100%;background-color: rgba(0,0,0,0.1);"></div>
-                      </div>
+                      
                     {% endfor %}
-                  </div>
+                  {% else %}
+                    <p>No posts here</p>
+                  {% endif %}
+                  <hr>
+                  
+                  <b><p><i>My Posts</i><p></b>
+                  {% if my_posts %}
+                    {% for i in my_posts %}
+                      <div style="border-radius: 2px;margin-bottom: 15px;padding:20px;box-shadow: 0 0 20px rgba(0,0,0,0.2)">
+                        {% if i.posted_by_id.user_dp %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src = "{{i.posted_by_id.user_dp.url}}";>
+                        {% else %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="/media/avatar.png">
+                        {% endif %}
+                        <b><p style="margin-top: 1px;font-size: 18px;">{{i.posted_by_id.user_name}}<br><small>{{i.post_datetime}}</small></p></b>
+                        <hr>
+
+                        <b><p style="">{{i.post_title}}</p></b>
+                        <p>{{i.content}}</p>
+                        
+                        <div style="width:40vw;max-height:400px;margin-bottom: 30px;display:inline-flex;flex-direction: row;overflow-x: auto;overflow-y: hidden;padding-bottom: 5px;">
+                          {% for j in posts_media %}
+                            {% if i.id == j.post_id.id %}
+                              <div>                         
+                                <img src="{{media_url}}{{j.media}}" style="width: 40vw;height: 330px">
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                        
+                        <form method="POST" action="{% url 'like' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                              <input type="submit" value="&#xf164" id="" name="like" class="far fa-thumbs-up" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">  
+                              
+                        </form>
+
+                        <form method="POST" action="{% url 'dislike' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                          <input type="submit" value="&#xf165" name="like" class="far fa-thumbs-down" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">        
+                        </form>
+
+                        <hr>
+                        <form method="POST" action="{% url 'comments' %}">
+                          {% csrf_token %}
+                          <div class="input-group mt-2">
+                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content' style="border-radius: 20px;">
+                             <span class="input-group-btn">
+                                  <!--<input class="btn btn-default" value="Comment" type="submit">-->
+                                  <button type="submit" style="background-color: transparent;border:none;transform: scale(1.6);margin: 5px;cursor: pointer;">
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                  </button>
+                                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                                  <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                             </span>
+                          </div>
+                        </form>
+                        
+                        <br>
+                        {% for j in post_comments %} 
+                          {% if i.id == j.post_id.id %}
+                            <div class="media mb-4">
+                              <img class="d-flex mr-3 rounded-circle" src="" alt="" width="30" height="30" style="background-image: url('{{j.user_id.user_dp.url}}');">
+                              <div class="media-body">
+                                <h6 class="mt-0">{{j.user_id.user_name}}</h6>
+                                <p>{{j.content}}</p>
+                              </div>
+                            </div>
+                          {% endif %}  
+                        {% endfor %}                  
+                      </div>
+                      
+                    {% endfor %}
+                  {% else %}
+                    <p>No posts here</p>
+                  {% endif %}
                 </div>
               </div>
-            </div>
             
-            <div class="col-md-3">
-              <div class="card text-center bg-primary text-white mb-3 flash_card">
-                <div class="card-body">
-                  <h5>Clubs In</h5>
-                  <h4 class="display-6">
-                    <i class="fas fa-users"></i> {{clubs_no}}
-                  </h4>
+            <!-- FLASH CARDS -->
+              <div class="col-md-3">
+                <br>
+                <div class="card text-center bg-primary text-white mb-3 flash_card" style="width:200px;">
+                  <div class="card-body">
+                    <h5>Clubs In</h5>
+                    <h4 class="display-6">
+                      <i class="fas fa-users"></i> {{clubs_no}}
+                    </h4>
+                      
+                      <form action="{% url 'clubs_joined' %}" method="POST">
+                        {% csrf_token %}    
+                        <input type="text" value="{{user.id}}" style="display:none" name="s_id">
+                        <input type="submit" value="View" class="btn btn-outline-light btn-sm">
+                      </form>
                     
-                    <form action="{% url 'clubs_joined' %}" method="POST">
+                  </div>
+                </div>
+
+                <div class="card text-center bg-success text-white mb-3 flash_card" style="width:200px;">
+                  <div class="card-body">
+                    <h5>My Events</h5>
+                    <h4 class="display-6">
+                      <i class="fas fa-folder"></i> {{no_events_registered}}
+                    </h4>
+                    <form action="{% url 'events_registered' %}" method="POST">
                       {% csrf_token %}    
                       <input type="text" value="{{user.id}}" style="display:none" name="s_id">
                       <input type="submit" value="View" class="btn btn-outline-light btn-sm">
                     </form>
-                  
+                    
+                  </div>
                 </div>
-              </div>
 
-              <div class="card text-center bg-success text-white mb-3 flash_card">
-                <div class="card-body">
-                  <h5>My Events</h5>
-                  <h4 class="display-6">
-                    <i class="fas fa-folder"></i> {{no_events_registered}}
-                  </h4>
-                  <form action="{% url 'events_registered' %}" method="POST">
-                    {% csrf_token %}    
-                    <input type="text" value="{{user.id}}" style="display:none" name="s_id">
-                    <input type="submit" value="View" class="btn btn-outline-light btn-sm">
-                  </form>
-                  
+                <div class="card text-center mb-3 flash_card" style="width:200px;box-shadow: 0 2px 10px">
+                  <div class="card-body">
+                    <h5>My Posts</h5>
+                    <h4 class="display-6">
+                      <i class="fas fa-pencil-alt"></i> {{myposts_count}}
+                    </h4>
+                    <a href="/postsUploaded/{{user.id}}" class="btn btn-outline-dark btn-sm">View</a>
+                  </div>
                 </div>
               </div>
-
-              <div class="card text-center bg-warning text-white mb-3 flash_card">
-                <div class="card-body">
-                  <h5>My Posts</h5>
-                  <h4 class="display-6">
-                    <i class="fas fa-pencil-alt"></i> {{myposts_count}}
-                  </h4>
-                  <a href="/postsUploaded/{{user.id}}" class="btn btn-outline-light btn-sm">View</a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -365,8 +412,8 @@
                   <div class="form-group">
                     <label for="image">Choose File</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="image" name="File" multiple>
-                      <label for="image" class="custom-file-label">--File--</label>
+                      <input type="file" onchange="ValidateSize(this)" class="custom-file-input" id="image" name="File" multiple>
+                      <label for="image" class="custom-file-label" id="post_files">--File--</label>
                     </div>
                     <small class="form-text text-muted">Max Size 3mb</small>
                   </div>
@@ -393,7 +440,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  {% if clubs_joined   %}
+                  {% if clubs_joined  %}
                     <form action="{% url 'leave_club' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
@@ -413,7 +460,7 @@
                     </div>
 
                     {% else %}
-                    Please join any club
+                      <h5>Please join any club</h5>
                   {% endif %}
                   
                 </div>
@@ -421,7 +468,7 @@
                 {% if clubs_joined %}
                   <input type="number" name="s_id" value="{{user.id}}" style="display:none">
                   <div class="modal-footer">
-                     <input class="btn btn-warning" value="Leave" type="submit">
+                     <input class="btn btn-warning btn-block" value="Leave" type="submit">
                   </div>
                 {% endif %}
                 </form>
@@ -440,47 +487,54 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{% url 'register_event' %}" method="POST">
-                  {% csrf_token %}
-                  <div class="container-fluid row" style="height:60vh;position:relative">
-                    <div class="col-md-3 select_club" style="overflow-y: auto;">
-                      <br>
+                {% if events %}
+                  <form action="{% url 'register_event' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="container-fluid row" style="height:60vh;position:relative">
+                      <div class="col-md-3 select_club" style="overflow-y: auto;">
+                        <br>
+                          {% for i in events %}
+                            <a class="btn btn-light btn-block event_option" id="{{i.event_name}}">
+                              {{i.event_name}}
+                            </a>
+                          {% endfor %}
+                        <br>
+                      </div>
+                      <div class="col-md-9" style="overflow-y: auto;">  
+                        <div class="container row " id="initial_poster_RegisterEvent" style="height:60vh">
+                          <img src="/media/registernow.jpg" style="transform: scale(0.9);">
+                        </div>
                         {% for i in events %}
-                          <a class="btn btn-light btn-block event_option" id="{{i.event_name}}">
-                            {{i.event_name}}
-                          </a>
-                        {% endfor %}
-                      <br>
-                    </div>
-                    <div class="col-md-9" style="overflow-y: auto;">  
-                      {% for i in events %}
-                        {% for j in events_media %}
-                          {% if i.id == j.event_id.id %}
-                            <div class="container-fluid row {{i.event_name}} about_event" style="height:60vh;display:none;">
-                                <div class="col-md-5" style="float:left;background-image: url('{{j.media.url}}');background-size: contain;box-shadow: 0 2px 15px rgba(0,0,0,0.6);border-radius: 12px;height:60vh;">
+                          {% for j in events_media %}
+                            {% if i.id == j.event_id.id %}
+                              <div class="container-fluid row {{i.event_name}} about_event" style="height:60vh;display:none;">
+                                  <div class="col-md-5" style="float:left;background-image: url('{{j.media.url}}');background-size: contain;box-shadow: 0 2px 15px rgba(0,0,0,0.6);border-radius: 12px;height:60vh;">
+                                  </div>
+                                  <div class="col-md-7" style="float:right;padding-left: 80px;">
+                                    <br><br><br><br>
+                                    <p><i class="fas fa-calendar-alt"></i>&nbsp; {{i.event_start_datetime}} - {{i.event_end_datetime}}</p>
+                                    <p><b>Organizer :</b> {{i.club_id.club_name}} Club</p>
+                                    <P><b>Event type :</b> {{i.event_type}}</p>
+                                    <p><b>Limit :</b> {{i.event_limit}}</p>
+                                    <p><b>Registered :</b> {{i.event_fill_status}}</p>
+                                    <p><b>Venue :</b> {{i.event_venue}}</p>
+                                  </div>
                                 </div>
-                                <div class="col-md-7" style="float:right;padding-left: 80px;">
-                                  <br><br><br><br>
-                                  <p><i class="fas fa-calendar-alt"></i>&nbsp; {{i.event_start_datetime}} - {{i.event_end_datetime}}</p>
-                                  <p><b>Organizer :</b> {{i.club_id.club_name}} Club</p>
-                                  <P><b>Event type :</b> {{i.event_type}}</p>
-                                  <p><b>Limit :</b> {{i.event_limit}}</p>
-                                  <p><b>Registered :</b> {{i.event_fill_status}}</p>
-                                  <p><b>Venue :</b> {{i.event_venue}}</p>
-                                </div>
-                              </div>
-                          {% endif %}
+                            {% endif %}
+                          {% endfor %}
                         {% endfor %}
-                      {% endfor %}
+                      </div>
                     </div>
-                  </div>
-                  <br>
-                  <input type="number" name="s_id" value="{{user.id}}" style="display:none">
-                  <input type="text" id="selected_event" name="selected_event" value="" style="display:none">
-                  <div class="modal-footer">
-                    <input type="submit" value="Register" class="btn btn-info btn-block">
-                  </div>
-                </form>
+                    <br>
+                    <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                    <input type="text" id="selected_event" name="selected_event" value="" style="display:none">
+                    <div class="modal-footer">
+                      <input type="submit" value="Register" class="btn btn-info btn-block">
+                    </div>
+                  </form>
+                {% else %}
+                  <center><h5>No events currently / Registrations are closed!<br><br>Please visit later.</h5></center>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -490,52 +544,59 @@
         <div class="modal fade" id="joinClubModal">
           <div class="modal-dialog modal-lg" id="join_club_modal">
             <div class="modal-content" style="width:90%">
-              <div class="modal-header bg-success text-white">
+              <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Join a Club</h5>
                 <button class="close" data-dismiss="modal">
                   <span>&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{% url 'join' %}" method="POST">
-                  {% csrf_token %}
-                  <div class="container-fluid row" style="height:60vh;position:relative">
-                    <div class="col-md-3 select_club" style="overflow-y: auto;">
-                      <br>
-                        {% for i in clubs_remain %}
-                          <a class="btn btn-light btn-block club_option" id="{{i.club_name}}">
-                            {{i.club_name}}
-                          </a>
-                        {% endfor %}
-                      <br>
-                    </div>
-                    <div class="col-md-9" style="overflow-y: auto;"> 
-                      {% for i in clubs_remain %}
-                        <div class="{{i.club_name}} about_club" id="{{i.club_name}}" style="display:none;" style="height:60vh;padding:20px;">
-                          <center>
-                          {% if i.club_logo %}
-                          <img src="{{i.club_logo.url}}" id="club_logo" style="height:95px;width:95px;border-radius: 12px;box-shadow: 0 3px 10px rgba(0,0,0,0.7);margin-top: 10px;">
-                          {% else %}
-                          <img src="" id="club_logo" style="height:95px;width:95px;border-radius: 25%;box-shadow: 0 0 5px rgba(0,0,0,0.5)">
-                          {% endif %}
-                          <br><br>
-                          <h4>About the club:</h4>
-                          <p style="text-align: justify;text-justify: inter-word;padding:20px">{{i.club_description}}</p>
-                          <a href="{{i.club_tc.url}}" target="_blank">Terms & Conditions</a><br><br>
-                          <input type="radio" class="agree" name="radio" value="agree">&nbsp;I agree &nbsp;
-                          <input type="radio" class="disagree" name="radio" value="disagree">&nbsp;I don't agree<br>
-                          </center>
+                {% if clubs_remain %}
+                  <form action="{% url 'join' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="container-fluid row" style="height:60vh;position:relative">
+                      <div class="col-md-3 select_club" style="overflow-y: auto;">
+                        <br>
+                          {% for i in clubs_remain %}
+                            <a class="btn btn-light btn-block club_option" id="{{i.club_name}}">
+                              {{i.club_name}}
+                            </a>
+                          {% endfor %}
+                        <br>
+                      </div>
+                      <div class="col-md-9" style="overflow-y: auto;"> 
+                        <div style="height:60vh;padding:20px;" id="initial_poster_joinClub">
+                          <img src="/media/join_club.jpg" id="club_logo" style="margin-top: 10px;">
                         </div>
-                      {% endfor %}
+                        {% for i in clubs_remain %}
+                          <div class="{{i.club_name}} about_club" id="{{i.club_name}}" style="display:none;" style="height:60vh;padding:20px;">
+                            <center>
+                            {% if i.club_logo %}
+                            <img src="{{i.club_logo.url}}" id="club_logo" style="height:95px;width:95px;border-radius: 12px;box-shadow: 0 3px 10px rgba(0,0,0,0.7);margin-top: 10px;">
+                            {% else %}
+                            <img src="" id="club_logo" style="height:95px;width:95px;border-radius: 25%;box-shadow: 0 0 5px rgba(0,0,0,0.5)">
+                            {% endif %}
+                            <br><br>
+                            <h4>About the club:</h4>
+                            <p style="text-align: justify;text-justify: inter-word;padding:20px">{{i.club_description}}</p>
+                            <a href="{{i.club_tc.url}}" target="_blank">Terms & Conditions</a><br><br>
+                            <input type="radio" class="agree" name="radio" value="agree">&nbsp;I agree &nbsp;
+                            <input type="radio" class="disagree" name="radio" value="disagree">&nbsp;I don't agree<br>
+                            </center>
+                          </div>
+                        {% endfor %}
+                      </div>
                     </div>
-                  </div>
-                  <br>
-                  <input type="number" name="s_id" value="{{user.id}}" style="display:none">
-                  <input type="text" id="selected_club" name="selected_club" value="" style="display:none">
-                  <div class="modal-footer">
-                    <input type="submit" value="Join" class="btn btn-success btn-block">
-                  </div>
-                </form>
+                    <br>
+                    <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                    <input type="text" id="selected_club" name="selected_club" value="" style="display:none">
+                    <div class="modal-footer">
+                      <input type="submit" value="Join" class="btn btn-primary btn-block">
+                    </div>
+                  </form>
+                {% else %}
+                  <h5>You have joined in all the clubs. Keep going!<i class="far fa-smile-wink"></i></h5>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -545,48 +606,57 @@
         <div class="modal fade" id="participatePollModal">
           <div class="modal-dialog modal-lg" id="join_club_modal">
             <div class="modal-content">
-              <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Cast your vote</h5>
-                <button class="close" data-dismiss="modal">
-                  <span>&times;</span>
-                </button>
+            {% if polls %}
+              <form action="{% url 'participate_poll' %}" method="POST">
+                <div class="modal-header bg-success text-white">
+                  <h5 class="modal-title">Cast your vote</h5>
+                  <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    {% for i in polls %}
+                      <div class="card">
+                        <div class="card-body">
+                          <h5>{{i.poll_title}}</h5>
+                          <h6>Ends on : {{i.end_datetime}}</h6>
+                            {% csrf_token %}
+                            {% if i.poll_type == "Single" %}
+                              {% for j in poll_options %}
+                                {% if i.id == j.poll_id.id %}
+                                  <input class="poll_option" type="radio" value="{{j.option}}" name="{{i.id}}">&nbsp;{{j.option}}<br>
+                                {% endif %}
+                              {% endfor %}
+                            {% endif %}
+                            {% if i.poll_type == "Multiple" %}
+                              {% for j in poll_options %}
+                                {% if i.id == j.poll_id.id %}
+                                  <input class="poll_option" type="checkbox" value="{{j.option}}" name="{{i.id}}">&nbsp;{{j.option}}<br>
+                                {% endif %}
+                              {% endfor %}
+                            {% endif %}
+                        </div>
+                      </div>
+                      <br>
+                    {% endfor %}
+                </div>
+                <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                <input type="text" name="votes" id="polled_polls" style="display:none">
+                <div class="modal-footer">
+                  <input type="submit" value="Vote" class="btn btn-success btn-block">
+                </div>
+              </form>
+            {% else %}
+              <div class="modal-header bg-success text-white">
+                  <h5 class="modal-title">Cast your vote</h5>
+                  <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                  </button>
               </div>
               <div class="modal-body">
-                {% for i in polls %}
-                  <div class="card">
-                    <div class="card-body">
-                      <h5>{{i.poll_title}}</h5>
-                      <h6>Ends on : {{i.end_datetime}}</h6>
-                      
-                      <form action="{% url 'participate_poll' %}" method="POST">
-                        {% csrf_token %}
-
-                        {% if i.poll_type == "Single" %}
-                          {% for j in poll_options %}
-                            {% if i.id == j.poll_id.id %}
-                              <input type="radio" value="{{j.option}}" name="poll_{{i.id}}">&nbsp;{{j.option}}<br>
-                            {% endif %}
-                          {% endfor %}
-                        {% endif %}
-                        
-                        {% if i.poll_type == "Multiple" %}
-                          {% for j in poll_options %}
-                            {% if i.id == j.poll_id.id %}
-                              <input type="checkbox" value="{{j.option}}" name="poll_{{i.id}}">&nbsp;{{j.option}}<br>
-                            {% endif %}
-                          {% endfor %}
-                        {% endif %}
-                        
-                        <input type="number" name="poll_id" value="{{i.id}}" style="display:none;">
-                        <br>{% csrf_token %}
-                        <input type="number" name="s_id" value="{{user.id}}" style="display:none;">
-                        <input type="submit" class="btn btn-primary" value="Vote">  
-                      </form>
-                    </div>
-                  </div>
-                  <br>
-                {% endfor %}
+                <h5>You have contributed in all the polls. Thank you!</h5><i class="fa fa-smile-o"></i>  
               </div>
+            {% endif %}
             </div>
           </div>
         </div>
@@ -597,43 +667,37 @@
             <div class="modal-content">
               <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title">Notifications</h5>
-               
                 <form action="{% url 'notifications_seen' %}" method="POST" >
                   {% csrf_token %}
                   <input type="number" name="s_id" value="{{user.id}}" style="display:none">
-                  <input type="submit" class="close" value="&times;">
+                  <button type="submit" class="btn bg-dark">
+                    <i class="fa fa-times" aria-hidden="true" style="color: white;font-size:20px"></i>
+                  </button>
                 </form>
               </div>
                 
               <div class="modal-body">
-                <h5> New </h5>
+                <b><h5> NEW </h5></b>
                 <hr>
                 <br>
                 {% for notif in new_notifications %}
                   <div class="card">
                     <div class="card-body">
-                      <!--<button class="close">
-                        <i class="fas fa-trash"></i>
-                      </button>-->
-                      <h5 class="card-title">{{notif.notification_content}}</h5>
+                      <b><p class="card-title">{{notif.notification_content}}</p></b>
                       <p class="card-text">{{notif.notification_datetime}}</p>
                     </div>
                   </div>
-                  <br>
                 {% endfor %}
-                <h5> Earlier </h5>
+                <br>
+                <h5> EARLIER </h5>
                 <hr>
                 {% for notif in old_notifications %}
                   <div class="card">
                     <div class="card-body">
-                      <!--<button class="close">
-                        <i class="fas fa-trash"></i>
-                      </button>-->
-                      <h5 class="card-title">{{notif.notification_content}}</h5>
-                      <p class="card-text">{{notif.notification_datetime}}</p>
+                      <b><h6 class="card-title">{{notif.notification_content}}</h6></b>
+                      <p class="card-text"style="font-size: 14px">{{notif.notification_datetime}}</p>
                     </div>
                   </div>
-                  <br>
                 {% endfor %}
               </div>
             </div>
@@ -673,23 +737,60 @@
         
         $('.club_option').click(function(){
           var cls = '.'+this.id;
+          $('#initial_poster_joinClub').css("display","none");
           $('.about_club').css("display","none");
           $(cls).css("display","block");
         });
+        
+        var polled = '';
+        $('.poll_option').click(function(){
+            selected_poll = $(this).attr('name');
+            var open = '[';
+            var close = ']';
+            if(polled.indexOf(selected_poll) == -1){
+              polled = polled + selected_poll +","; 
+            }
+            $('#polled_polls').val(open+polled+close);
+        });        
 
         $('input[type="radio"]').click(function(){
             selected_club = $(this).closest('div').attr('id');
             $('#selected_club').val(selected_club);
-            
         });
         
         $('.event_option').click(function(){
           var cls = '.'+this.id;
+          $('#initial_poster_RegisterEvent').css("display","none");
           $('.about_event').css("display","none");
           $(cls).css("display","block");
           $('#selected_event').val(this.id);
         });        
 
+        var posts_files;
+        window.post_files="";
+        function ValidateSize(file) {
+            var FileSize = file.files[0].size / 1024 / 1024;
+            x = document.getElementById('post_files');
+            if (FileSize > 3) {
+                alert('File size exceeds 3 MB');
+                this.value = "";
+               // $(file).val(''); //for clearing with Jquery
+            }
+            else
+            {
+              posts_files = posts_files + file.files[0].name +" "; 
+              x.innerHTML = posts_files;
+            }
+        
+        }
+
+        $('#like').click(function(){
+          $('#like').css("color","blue");
+        });
+
+      $('#dislike').click(function(){
+        $('#dislike').css("color","red");
+      });
       </script>
 
   </body>

@@ -47,6 +47,7 @@ class room(models.Model):
 
 class event(models.Model):
 	event_name = models.CharField(max_length=30)
+	event_description = models.TextField()
 	event_start_datetime = models.DateTimeField(default=timezone.now, blank=True)
 	event_end_datetime = models.DateTimeField(default=timezone.now, blank=True)
 	event_type = models.CharField(max_length=30)
@@ -58,6 +59,7 @@ class event(models.Model):
 	club_id = models.ForeignKey(club,on_delete=models.CASCADE)
 	event_venue = models.ForeignKey(room,on_delete=models.CASCADE) # CHECK THIS #
 	
+
 	def __str__(self):
 		return str(self.id)+" " + self.event_name
 

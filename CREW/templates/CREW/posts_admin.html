@@ -9,16 +9,17 @@
     crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A11 Frontend</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
+  <title>CREWS@IIITS</title>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
-      <a href="CA_index.html" class="navbar-brand">
-        <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
+      <a href="/Club_Admin/{{user}}" class="navbar-brand">
+        <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -26,17 +27,12 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="CA_index.html" class="nav-link">
-              <i class="fas fa-home"></i> Home
+            <a href="/Club_Admin/{{user}}" class="nav-link">
+              <i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard
             </a>
           </li>
           <li class="nav-item">
-            <a href="profile.html" class="nav-link">
-              <i class="fas fa-user"></i> Profile
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="login.html" class="nav-link">
+            <a href="/" class="nav-link">
               <i class="fas fa-user-times"></i> Logout
             </a>
           </li>
@@ -45,7 +41,7 @@
     </div>
   </nav>
 
-  <!-- HEADER -->
+  <!-- HEADER 
   <header id="main-header" class="py-2 bg-primary text-white fixed-top" style="margin-top:55px;">
     <div class="container">
       <div class="row">
@@ -54,146 +50,79 @@
         </div>
       </div>
     </div>
-  </header>
+  </header> -->
 
-  <!-- SEARCH -->
-  <section id="search" class="py-4 mb-4 bg-light fixed-top" style="margin-top:110px">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <a href="CA_index.html" class="btn btn-light btn-block">
-            <i class="fas fa-arrow-left"></i> Back To Dashboard
-          </a>
-        </div>
-        <div class="col-md-6 ml-auto">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search Posts...">
-            <div class="input-group-append">
-              <button class="btn btn-primary">Search</button>
+  <!-- SEARCH 
+    <section id="search" class="py-4 mb-4 bg-light fixed-top" style="margin-top:110px">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <a href="/Club_Admin/{{user}}" class="btn btn-light btn-block">
+              <i class="fas fa-arrow-left"></i> Back To Dashboard
+            </a>
+          </div>
+          <div class="col-md-6 ml-auto">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search Posts...">
+              <div class="input-group-append">
+                <button class="btn btn-primary">Search</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section> -->
 
   <!-- POSTS -->
-  <section id="posts" style="margin-top:215px">
+  <section id="posts" style="margin-top:150px">
     <div class="container">
       <div class="row">
         <div class="col">
           <div class="card">
-            <div class="card-header">
-              <h4>Latest Posts</h4>
-            </div>
-            <table class="table table-striped">
-              <thead class="thead-dark">
-                <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Post One</td>
-                  <td>Web Development</td>
-                  <td>May 10 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Post Two</td>
-                  <td>Tech Gadgets</td>
-                  <td>May 11 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Post Three</td>
-                  <td>Web Development</td>
-                  <td>May 13 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>Post Four</td>
-                  <td>Business</td>
-                  <td>May 15 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>Post Five</td>
-                  <td>Web Development</td>
-                  <td>May 17 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>6</td>
-                  <td>Post Six</td>
-                  <td>Health & Wellness</td>
-                  <td>May 20 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {% if UserPosts %}
+            <table class="table">
+                <thead class="thead-dark">
+                  <th colspan="5"><h4>My Posts</h4></th>
+                </thead>
 
-            <!-- PAGINATION -->
-            <nav class="ml-4">
-              <ul class="pagination">
-                <li class="page-item disabled">
-                  <a href="#" class="page-link">Previous</a>
-                </li>
-                <li class="page-item active">
-                  <a href="#" class="page-link">1</a>
-                </li>
-                <li class="page-item">
-                  <a href="#" class="page-link">2</a>
-                </li>
-                <li class="page-item">
-                  <a href="#" class="page-link">3</a>
-                </li>
-                <li class="page-item">
-                  <a href="#" class="page-link">Next</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <br><br><br>
+                  <tr class="bg-light">
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Club Name</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+                
+                <tbody>
+                  {% for i in UserPosts %}
+                    {% for j in clubs %}
+                       {% if i.club_id.id == j.id %} 
+                          <tr>
+                            
+                            <td>{{i.id}}</td>
+                            <td>{{i.post_title}}</td>
+                            <td>{{j.club_name}}</td>
+                            <td>{{i.post_datetime}}</td>
+                            <td>
+                               <a href="/CA_post_Details/{{user}}/{{i.id}}">
+                              <input type = "button" class="btn btn-outline-dark btn-block" value="Details" name = "Details" style="width:100px;"></td>
+                              </a>
+                          </tr>
+                       {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                     
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <h5> No posts </h5>
+            {% endif %}
+
+            
   <!-- FOOTER -->
-  <footer id="main-footer" class="bg-dark text-white mt-5 p-1">
+  <footer id="main-footer" class="bg-dark text-white mt-5 p-1 fixed-bottom">
     <div class="container">
       <div class="row">
         <div class="col">

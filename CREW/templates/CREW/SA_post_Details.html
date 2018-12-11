@@ -15,22 +15,22 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
+   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
-      <a href="/student/{{stud}}" class="navbar-brand" style="font-size: 25px;">
-          <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
+      <a href="/Super_Admin/{{user}}" class="navbar-brand">
+        <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
+        
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="/student/{{stud}}" class="nav-link">
+            <a href="/Super_Admin/{{user}}" class="nav-link">
               <i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard
             </a>
           </li>
-         
           <li class="nav-item">
             <a href="/" class="nav-link">
               <i class="fas fa-user-times"></i> Logout
@@ -42,18 +42,19 @@
   </nav>
 
 
-
+  
+  
   <!-- DETAILS -->
-  <section id="details" style="margin-top:150px;">
+  <section id="details" style="margin-top:150px">
     <div class="container">
       <div class="row">
         <div class="col">
           <div class="card">
-            <div class="card-header bg-dark text-white">
+            <div class="card-header">
               <h4>Edit Post</h4>
             </div>
             <div class="card-body">
-              <form method = "POST" action = "/EditPost">
+              <form method = "POST" action = "/SA_EditPost" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
                   <label for="title">Title</label>
@@ -62,26 +63,25 @@
                 <div class="form-group">
                   <label for="image">Upload Image</label>
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image" onchange="ValidateSize(this)">
+                    <input type="file" onchange="ValidateSize(this)" class="custom-file-input" name= "editPost_files"id="image">
                     <label for="image" class="custom-file-label" id="post_files">Choose File</label>
                   </div>
                   <small class="form-text text-muted">Max Size 3mb</small>
                 </div>
                 <div class="form-group">
                   <label for="body">Body</label>
-                  <input type="hidden" name="s_id" value='{{ student_data.id }}'>
+                  <input type="hidden" name="sa_id" value='{{ student_data.id }}'>
                   <input type="hidden" name="p_id" value='{{ UserPosts.id }}'>
                   <textarea  class="form-control" name = "Contents" >{{UserPosts.content}}</textarea>
                 </div>
-                <hr>
-                <div class="container">
+                 <div class="container">
                   <div class="row">
                     <div class="col-md-6">
                       <button  type = "submit" class="btn btn-outline-success btn-block" ><i class="fas fa-check"></i> Save Changes </button>
                     </div>
                     <div class="col-md-6">
-                      <a href="/DelPost/{{stud}}/{{UserPosts.id}}" class="btn btn-outline-danger btn-block">
-                        <i class="fas fa-trash"></i> Delete Post
+                      <a href="/SA_DelPost/{{user}}/{{UserPosts.id}}" class="btn btn-outline-danger btn-block">
+            <i class="fas fa-trash"></i> Delete Post
                       </a>
                     </div>
                   </div>
@@ -110,7 +110,11 @@
       </footer>
 
 
-  <!-- MODALS -->
+
+  
+
+  
+
 
   <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
@@ -123,6 +127,7 @@
   <script>
     // Get the current year for the copyright
     $('#year').text(new Date().getFullYear());
+
     var post_files;
     window.post_files="";
     function ValidateSize(file) {
@@ -135,10 +140,9 @@
         else
         {
           post_files = post_files + file.files[0].name +" "; 
-          x.innerHTML = post_files;
+          x.innerHTML = file.files[0].name;
         }
     }
-    
   </script>
 </body>
 

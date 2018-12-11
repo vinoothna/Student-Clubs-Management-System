@@ -16,13 +16,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A11 Frontend</title>
+  <title>CREWS@IIITS</title>
   <style type="text/css">
     .col-md-252
     {
       margin-right: 20px;
       width:150px;
     }
+    #ringing_bell
+      {
+        animation: moveIt 2.5s ease-in-out infinite;
+        display:inline-block;
+      }
+      @keyframes moveIt {
+        0%, 100% {
+          transform: rotate(45deg);
+        }
+        50% {
+          transform: rotate(-45deg);
+        }
+      }
    #join_club_modal {
         max-width: 80% !important;
       }
@@ -54,18 +67,26 @@
             z-index:3;
             cursor: pointer;
         }
-        .carousel-inner > .carousel-item > img {
-          width : 500px;
-          height : 500px;
-          margin-top: 10%;
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
         }
-        #close_button{
-          top: 20px;
-          right: 10px;
-          position: fixed;
-          z-index: 3;
-        }
-        
+        #no_notif,#poll
+      {
+        background-color: #c75858;
+        border-radius: 24px;
+        box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, .3);
+        color: #fff;
+        cursor: default;
+        font-size: 13px;
+        height: 24px;
+        line-height: 24px;
+        position: absolute;
+        right: 97px;
+        text-align: center;
+        top: 18px;
+        width: 24px;
+      }
   </style>
 </head>
 
@@ -75,7 +96,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
       <div class="container">
         <a href="/Club_Admin/{{user.id}}" class="navbar-brand">
-          <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/49/IIIT_Sri_City_Logo.png/220px-IIIT_Sri_City_Logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
+          <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
         </a>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
           <span class="navbar-toggler-icon"></span>
@@ -105,9 +126,8 @@
 
   <!-- ACTIONS -->
     <section id="actions" class="py-4 mb-4 bg-dark fixed-top" style="margin-top:75px;z-index: 0;">
-      <div class="container-fluid" style="margin-left:170px">
-        <div class="row">
-          <div class="row">
+      <div class="container-fluid">
+        <div class="row justify-content-center" >
             <div class="col-md-252">
               <a href="#" class="btn btn-info btn-block" data-toggle="modal" data-target="#joinClubModal">
                 Join a Club
@@ -124,6 +144,11 @@
               </a>
             </div>
             <div class="col-md-252">
+              <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#addPostModal">
+                Create Post
+              </a>
+            </div>
+            <div class="col-md-252">
               <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#orgEventModal">
                 Organize Events
               </a>
@@ -135,84 +160,83 @@
             </div>
             <div class="col-md-252">
               <a href="#" class="btn btn-light btn-block" data-toggle="modal" data-target="#notificationModal">
-                <i class="fas fa-bell"></i> &nbsp;Notifications
+                {% if new_notif_no != 0 %}  
+                  <i class="fas fa-bell" id="ringing_bell"></i>
+                  <span id="no_notif">
+                    {{new_notif_no}}
+                  </span>
+                {% else %}
+                  <i class="fas fa-bell" id="bell"></i>
+                {% endif %}&nbsp;Notifications
               </a>
             </div>
-          </div>
         </div>
       </div>
     </section>
 
   <!-- POSTS -->
-    <section id="posts" style="margin-top:175px">
+    <section id="posts" style="margin-top:130px">
       <div class="container">
-        <div class="row">
-          <div class="col-md-9"  style="background-color: rgba(0,0,0,0.1)">
-              <div class="card mt-4">
-                <div class="container" >
-                  <div class="row" style="overflow-y: auto;height: 426px;" >
+        <div class="row justify-content-center align-items-center">
+          
+          <!-- FEED -->
+              <div class="col-md-7" style="border:none;">
+                <div class="card mt-4" style="overflow-y: auto;height: 60vh;border:none;padding:10px;">
+                  <b><p><i>Post by others</i><p></b>
+                  {% if posts %}  
                     {% for i in posts %}
-                      <div class="col-lg-12">
-                        <div class="float-right">
-                          <a onclick="on()">
-                            <i class="fas fa-image" style="font-size: 36px;"></i>
-                          </a>
-                        </div>
-                        
-                          <img class="img-circle mt-2 rounded-circle" width="50" height="50" alt="" style="float: left;background-image: url('{{i.posted_by_id.user_dp.url}}');border-radius: 50%"><h5 class="mt-3">&nbsp;&nbsp;{{i.post_title}} <small>by {{i.posted_by_id.user_name}} on {{i.post_datetime}}</small></h5>                    
-                        
-                        <br>
-                        
+                      <div style="border-radius: 2px;margin-bottom: 15px;padding:20px;box-shadow: 0 0 20px rgba(0,0,0,0.2)">
+                        {% if i.posted_by_id.user_dp %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="{{i.posted_by_id.user_dp.url}}">
+                        {% else %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="/media/avatar.png">
+                        {% endif %}
+                        <b><p style="margin-top: 1px;font-size: 18px;">{{i.posted_by_id.user_name}}<br><small>{{i.post_datetime}}</small></p></b>
+                        <hr>
+
+                        <b><p style="">{{i.post_title}}</p></b>
                         <p>{{i.content}}</p>
-                        <div id="overlay">                          
-                            <div id="demo" class="carousel slide" data-ride="carousel">  
-                                                      
-                                <div class="carousel-inner">
-                                  <div id="close_button">
-                                    <a onclick="off()">
-                                      <i class="fas fa-times" style="color: grey;font-size: 36px;"></i>
-                                    </a>
-                                  </div>
-                                  {% for j in posts_media %}
-                                      {% if i.id == j.post_id.id %}
-                                        <div class="carousel-item active">                         
-                                          <img class="d-block mx-auto" src="{{media_url}}{{j.media}}"  alt="">
-                                        </div>
-                                      {% endif %}
-                                  {% endfor %}
-                                </div>
-                                <a class="carousel-control-prev" href="#demo" data-slide="prev">
-                                  <span class="carousel-control-prev-icon"></span>
-                                </a>
-                                <a class="carousel-control-next" href="#demo" data-slide="next">
-                                  <span class="carousel-control-next-icon"></span>
-                                </a>
+                        
+                        <div style="width:40vw;max-height:400px;margin-bottom: 30px;display:inline-flex;flex-direction: row;overflow-x: auto;overflow-y: hidden;padding-bottom: 5px;">
+                          {% for j in posts_media %}
+                            {% if i.id == j.post_id.id %}
+                              <div>                         
+                                <img src="{{media_url}}{{j.media}}" style="width: 40vw;height: 330px">
                               </div>
-                        </div>  
+                            {% endif %}
+                          {% endfor %}
+                        </div>
                         
                         <form method="POST" action="{% url 'like' %}" style="display: inline-block;">
                           {% csrf_token %}
-                          <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                           <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
-                          <input type="submit" value="&#xf164" name="like" class="fas fa-thumbs-up" >                        
+                          <input type="submit" value="&#xf164" name="like" class="far fa-thumbs-up" id="like" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">  
                         </form>
+
                         <form method="POST" action="{% url 'dislike' %}" style="display: inline-block;">
                           {% csrf_token %}
-                          <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                           <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
-                          <input type="submit" value="&#xf165" name="like" class="fas fa-thumbs-down" >                        
+                          <input type="submit" value="&#xf165" name="like" class="far fa-thumbs-down" id="dislike" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">        
                         </form>
+
+                        <hr>
                         <form method="POST" action="{% url 'comments' %}">
                           {% csrf_token %}
                           <div class="input-group mt-2">
-                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content'>
+                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content' style="border-radius: 20px;">
                              <span class="input-group-btn">
-                                  <input class="btn btn-default" value="Comment" type="submit" >
-                                  <input type="number" name="s_id" value="{{user.id}}" style="display:none">
+                                  <!--<input class="btn btn-default" value="Comment" type="submit">-->
+                                  <button type="submit" style="background-color: transparent;border:none;transform: scale(1.6);margin: 5px;cursor: pointer;">
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                  </button>
+                                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                                   <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
                              </span>
                           </div>
                         </form>
+                        
                         <br>
                         {% for j in post_comments %} 
                           {% if i.id == j.post_id.id %}
@@ -226,42 +250,129 @@
                           {% endif %}  
                         {% endfor %}                  
                       </div>
-                      <div class="container">
-                        <div class="well well-sm col-lg-12" style="height:5px;width:100%;background-color: rgba(0,0,0,0.1);"></div>
-                      </div>
+                      
                     {% endfor %}
-                  </div>
+                  {% else %}
+                    <p>No posts here</p>
+                  {% endif %}
+                  <hr>
+                  
+                  <b><p><i>My Posts</i><p></b>
+                  {% if my_posts %}
+                    {% for i in my_posts %}
+                      <div style="border-radius: 2px;margin-bottom: 15px;padding:20px;box-shadow: 0 0 20px rgba(0,0,0,0.2)">
+                        {% if i.posted_by_id.user_dp %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="{{i.posted_by_id.user_dp.url}}">
+                        {% else %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="/media/avatar.png">
+                        {% endif %}
+                        <b><p style="margin-top: 1px;font-size: 18px;">{{i.posted_by_id.user_name}}<br><small>{{i.post_datetime}}</small></p></b>
+                        <hr>
+
+                        <b><p style="">{{i.post_title}}</p></b>
+                        <p>{{i.content}}</p>
+                        
+                        <div style="width:40vw;max-height:400px;margin-bottom: 30px;display:inline-flex;flex-direction: row;overflow-x: auto;overflow-y: hidden;padding-bottom: 5px;">
+                          {% for j in posts_media %}
+                            {% if i.id == j.post_id.id %}
+                              <div>                         
+                                <img src="{{media_url}}{{j.media}}" style="width: 40vw;height: 330px">
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                        
+                        <form method="POST" action="{% url 'like' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                              <input type="submit" value="&#xf164" id="" name="like" class="far fa-thumbs-up" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">  
+                              
+                        </form>
+
+                        <form method="POST" action="{% url 'dislike' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                          <input type="submit" value="&#xf165" name="like" class="far fa-thumbs-down" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">        
+                        </form>
+
+                        <hr>
+                        <form method="POST" action="{% url 'comments' %}">
+                          {% csrf_token %}
+                          <div class="input-group mt-2">
+                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content' style="border-radius: 20px;">
+                             <span class="input-group-btn">
+                                  <!--<input class="btn btn-default" value="Comment" type="submit">-->
+                                  <button type="submit" style="background-color: transparent;border:none;transform: scale(1.6);margin: 5px;cursor: pointer;">
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                  </button>
+                                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                                  <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                             </span>
+                          </div>
+                        </form>
+                        
+                        <br>
+                        {% for j in post_comments %} 
+                          {% if i.id == j.post_id.id %}
+                            <div class="media mb-4">
+                              <img class="d-flex mr-3 rounded-circle" src="" alt="" width="30" height="30" style="background-image: url('{{j.user_id.user_dp.url}}');">
+                              <div class="media-body">
+                                <h6 class="mt-0">{{j.user_id.user_name}}</h6>
+                                <p>{{j.content}}</p>
+                              </div>
+                            </div>
+                          {% endif %}  
+                        {% endfor %}                  
+                      </div>
+                      
+                    {% endfor %}
+                  {% else %}
+                    <p>No posts here</p>
+                  {% endif %}
                 </div>
               </div>
-            </div>
+          
+
           <div class="col-md-3">
-            <div class="card text-center bg-primary text-white mb-3 flash_card" >
+            <br>
+            <div class="card text-center bg-primary text-white mb-3 flash_card" style="width:200px;margin-top:30px;">
               <div class="card-body">
-                <h5>Students</h5>
-                <h4 class="display-6">
-                  <i class="fas fa-users"></i>&nbsp;{{no_of_students}}
-                </h4>
-                <a href="club_students.html" class="btn btn-outline-light btn-sm">View</a>
+                <h5>Clubs</h5>
+                  <h4 class="display-6">
+                    <i class="fas fa-users"></i> {{clubs_no}}
+                  </h4>
+                    
+                    <form action="{% url 'Students_in_Club' %}" method="POST">
+                      {% csrf_token %}    
+                      <input type="text" value="{{user.id}}" style="display:none" name="ca_id">
+                      <input type="submit" value="View" class="btn btn-outline-light btn-sm">
+                    </form>
               </div>
             </div>
 
-            <div class="card text-center bg-success text-white mb-3 flash_card">
-              <div class="card-body">
-                <h5>Events organized</h5>
-                <h4 class="display-6">
-                  <i class="fas fa-folder"></i>&nbsp;{{events_organized}}
-                </h4>
-                <a href="events_admin.html" class="btn btn-outline-light btn-sm">View</a>
+            <div class="card text-center bg-success text-white mb-3 flash_card" style="width:200px;">
+                <div class="card-body">
+                  <h5>Events</h5>
+                  <h4 class="display-6">
+                    <i class="fas fa-folder"></i> {{events_organized}}
+                  </h4>
+                  <form action="{% url 'CA_events' %}" method="POST">
+                    {% csrf_token %}    
+                    <input type="text" value="{{user.id}}" style="display:none" name="ca_id">
+                    <input type="submit" value="View" class="btn btn-outline-light btn-sm">
+                  </form>
+                </div>
               </div>
-            </div>
 
-            <div class="card text-center bg-warning text-white mb-3 flash_card">
+            <div class="card text-center bg-warning text-white mb-3 flash_card" style="width:200px;">
               <div class="card-body">
                 <h5>My Posts</h5>
                 <h4 class="display-6">
                   <i class="fas fa-pencil-alt"></i>&nbsp;{{myposts_count}}
                 </h4>
-                <a href="posts_admin.html" class="btn btn-outline-light btn-sm">View</a>
+                <a href="/club_admin_posts/{{user.id}}" class="btn btn-outline-light btn-sm">View</a>
               </div>
             </div>
           </div>
@@ -296,6 +407,7 @@
                   <span>&times;</span>
                 </button>
               </div>
+              {% csrf_token %}
               <div class="modal-body">
                 {% csrf_token %}
                 <form action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data"> 
@@ -307,7 +419,7 @@
                     <label for="category">Club</label>
                     {% csrf_token %}
                     <select class="form-control" name="Club">
-                      {% for i in clubs_joined %}
+                      {% for i in post_clubs %}
                         {% for j in clubs %}
                           {% if i == j.id %}
                             <option value="{{j.club_name}}">{{j.club_name}}</option>
@@ -319,8 +431,8 @@
                   <div class="form-group">
                     <label for="image">Choose File</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="image" name="File" multiple>
-                      <label for="image" class="custom-file-label">--File--</label>
+                      <input type="file" onchange="ValidateSize(this,'add_post')" class="custom-file-input" id="image" name="File" multiple>
+                      <label for="image" class="custom-file-label" id="post_files">--File--</label>
                     </div>
                     <small class="form-text text-muted">Max Size 3mb</small>
                   </div>
@@ -336,12 +448,11 @@
           </div>
         </div>
 
-
       <!-- LEAVE CLUB MODAL -->
         <div class="modal fade" id="leaveClubModal">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
-              <div class="modal-header bg-warning text-white">
+              <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Leave a Club</h5>
                   <button class="close" data-dismiss="modal">
                     <span>&times;</span>
@@ -368,7 +479,7 @@
                     </div>
 
                     {% else %}
-                    Please join any club
+                    <h5>Please join any club</h5>
                   {% endif %}
                   
                 </div>
@@ -376,7 +487,7 @@
                 {% if clubs_joined %}
                   <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                   <div class="modal-footer">
-                     <input class="btn btn-warning" value="Leave" type="submit">
+                     <input class="btn btn-primary" value="Leave" type="submit">
                   </div>
                 {% endif %}
                 </form>
@@ -395,7 +506,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{% url 'register_event' %}" method="POST">
+                {% if events %} 
+                  <form action="{% url 'register_event' %}" method="POST">
                   {% csrf_token %}
                   <div class="container-fluid row" style="height:60vh;position:relative">
                     <div class="col-md-3 select_club" style="overflow-y: auto;">
@@ -407,7 +519,10 @@
                         {% endfor %}
                       <br>
                     </div>
-                    <div class="col-md-9" style="overflow-y: auto;">  
+                    <div class="col-md-9" style="overflow-y: auto;">
+                      <div class="container row " id="initial_poster_RegisterEvent" style="height:60vh">
+                          <img src="/media/registernow.jpg" style="transform: scale(0.9);">
+                      </div>  
                       {% for i in events %}
                         {% for j in events_media %}
                           {% if i.id == j.event_id.id %}
@@ -435,7 +550,10 @@
                   <div class="modal-footer">
                     <input type="submit" value="Register" class="btn btn-info btn-block">
                   </div>
-                </form>
+                  </form>
+                {% else %}
+                  <center><h5>No events currently / Registrations are closed!<br><br>Please visit later.</h5></center>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -445,13 +563,14 @@
         <div class="modal fade" id="joinClubModal">
           <div class="modal-dialog modal-lg" id="join_club_modal">
             <div class="modal-content" style="width:90%">
-              <div class="modal-header bg-success text-white">
+              <div class="modal-header bg-info text-white">
                 <h5 class="modal-title">Join a Club</h5>
                 <button class="close" data-dismiss="modal">
                   <span>&times;</span>
                 </button>
               </div>
               <div class="modal-body">
+              {% if clubs_remain %}
                 <form action="{% url 'join' %}" method="POST">
                   {% csrf_token %}
                   <div class="container-fluid row" style="height:62vh;position:relative">
@@ -465,6 +584,9 @@
                       <br>
                     </div>
                     <div class="col-md-9" style="overflow-y: auto;"> 
+                      <div style="height:60vh;padding:20px;" id="initial_poster_joinClub">
+                          <img src="/media/join_club.jpg" id="club_logo" style="margin-top: 10px;">
+                        </div>
                       {% for i in clubs_remain %}
                         <div class="{{i.club_name}} about_club" id="{{i.club_name}}" style="display:none;" style="height:60vh;padding:20px;">
                           <center>
@@ -488,14 +610,17 @@
                   <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
                   <input type="text" id="selected_club" name="selected_club" value="" style="display:none">
                   <div class="modal-footer">
-                    <input type="submit" value="Join" class="btn btn-success btn-block">
+                    <input type="submit" value="Join" class="btn btn-info btn-block">
                   </div>
                 </form>
+              {% else %}
+                  <h5>You have joined in all the clubs. Keep going!<i class="far fa-smile-wink"></i></h5>
+              {% endif %}
               </div>
             </div>
           </div>
         </div>
-
+    
       <!-- NOTIFICATION MODAL -->
         <div class="modal fade" id="notificationModal">
           <div class="modal-dialog modal-lg">
@@ -506,47 +631,43 @@
                 <form action="{% url 'notifications_seen' %}" method="POST" >
                   {% csrf_token %}
                   <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
-                  <input type="submit" class="close" value="&times;">
+                  <button type="submit" class="btn bg-dark">
+                    <i class="fa fa-times" aria-hidden="true" style="color: white;font-size:20px"></i>
+                  </button>
                 </form>
               </div>
                 
               <div class="modal-body">
-                <h5> New </h5>
+                <b><h5> NEW </h5></b>
                 <hr>
                 <br>
                 {% for notif in new_notifications %}
                   <div class="card">
                     <div class="card-body">
-                      <button class="close">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                      <h5 class="card-title">{{notif.notification_content}}</h5>
+                      <b><p class="card-title">{{notif.notification_content}}</p></b>
                       <p class="card-text">{{notif.notification_datetime}}</p>
                     </div>
                   </div>
-                  <br>
                 {% endfor %}
-                <h5> Earlier </h5>
+                <br>
+                <h5> EARLIER </h5>
                 <hr>
                 {% for notif in old_notifications %}
                   <div class="card">
                     <div class="card-body">
-                      <button class="close">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                      <h5 class="card-title">{{notif.notification_content}}</h5>
-                      <p class="card-text">{{notif.notification_datetime}}</p>
+                      <b><h6 class="card-title">{{notif.notification_content}}</h6></b>
+                      <p class="card-text"style="font-size: 14px">{{notif.notification_datetime}}</p>
                     </div>
                   </div>
-                  <br>
                 {% endfor %}
               </div>
+            
             </div>
           </div>
         </div>
 
       <!-- CONDUCT POLL MODAL -->
-      <div class="modal fade" id="conductPollModal">
+        <div class="modal fade" id="conductPollModal">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header bg-warning text-white">
@@ -643,7 +764,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="/organize/" method="POST">
+                <form action="{% url 'organize_event' %}" method="POST">
                   {% csrf_token %}
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -671,12 +792,9 @@
                       <span class="input-group-text">Room No.&nbsp;</span>
                     </div>
                     <select class="form-control" name="room">
-                      <option value="101">101</option>
-                      <option value="102">103</option>
-                      <option value="105">105</option>
-                      <option value="107">107</option>
-                      <option value="113">113</option>
-                      <option value="115">115</option>
+                      {% for r in rooms %}
+                        <option value="{{r.room_num}}">{{r.room_num}}</option>
+                      {% endfor %}
                     </select>
                   </div>
                   <div class="input-group mb-3">
@@ -684,6 +802,12 @@
                       <span class="input-group-text">Type&nbsp;</span>
                     </div>
                     <input type="text" class="form-control" name="type">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Host&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="host">
                   </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -700,13 +824,13 @@
                   <div class="form-group">
                     <label for="image">Choose File</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="image" name="event_media">
-                      <label for="image" class="custom-file-label">--File--</label>
+                      <input type="file" onchange="ValidateSize(this,'organize_event')" class="custom-file-input" id="image" name="event_media">
+                      <label for="image" class="custom-file-label" id="event_files">--File--</label>
                     </div>
                     <small class="form-text text-muted">Max Size 3mb</small>
                   </div>
                   <div class="modal-footer">
-                    <input type="submit" class="btn btn-success"  data-toggle="modal" value='Organize'>
+                    <input type="submit" class="btn btn-success btn-block"  data-toggle="modal" value='Organize'>
                    </div>
                 </form>
               </div>
@@ -715,65 +839,123 @@
         </div>
 
 
+  <!-- JAVASCRIPT/JQUERY -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
 
-  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
+    <script>
+      
 
-  <script>
-    
-    // Add options to the polls 
-    $('#add_poll_option').click(function(){
-      var id = ($('.option').length + 1).toString();
-      $('.options_space').append('<div class="input-group mb-3 option" id="option'+id+'"><input type="text" class="form-control" name="opt'+id+'_title" placeholder="option'+id+'"><div class="upload-btn-wrapper btn btn-warning"><i class="far fa-image"></i><input type="file" name="opt'+id+'_img" ></div></div>');
-      $('#no_of_options').val(id);
-    });
+      
+      // Add options to the polls 
+      
+      $('#add_poll_option').click(function(){
+        var id = ($('.option').length + 1).toString();
+        $('.options_space').append('<div class="input-group mb-3 option" id="option'+id+'"><input type="text" class="form-control" name="opt'+id+'_title" placeholder="option'+id+'"><div class="upload-btn-wrapper btn btn-warning"><i class="far fa-image"></i><input type="file" name="opt'+id+'_img" ></div></div>');
+        $('#no_of_options').val(id);
+      });
 
-    // Remove Options
-    $('#remove_poll_option').click(function(){
-      var id = ($('.option').length).toString();
-      var total_options = ($('.option').length - 1).toString(); 
-      $('#no_of_options').val(total_options);
-      $('#option'+id).remove();
-    });
-    // Get the current year for the copyright
-    $('#year').text(new Date().getFullYear());
-    
-    $('.close').click(function(){
-      var $target = $(this).parents('.card');
-      $target.hide('slow', function(){ $target.remove(); });
-    })
-    function on(){
-          document.getElementById("overlay").style.display = "block";
-        }
+      $('#like').click(function(){
+        $('#like').val("&#xf164");
+      });
 
-        function off(){
-          document.getElementById("overlay").style.display = "none";
-        }
+      $('#dislike').click(function(){
+        $('#dislike').val("&#xf165");
+      });
 
-    $('.club_option').click(function(){
-          var cls = '.'+this.id;
-          $('.about_club').css("display","none");
-          $(cls).css("display","block");
-        });
+      // Remove Options
+      $('#remove_poll_option').click(function(){
+        var id = ($('.option').length).toString();
+        var total_options = ($('.option').length - 1).toString(); 
+        $('#no_of_options').val(total_options);
+        $('#option'+id).remove();
+      });
+      // Get the current year for the copyright
+      $('#year').text(new Date().getFullYear());
+      
+      $('.close').click(function(){
+        var $target = $(this).parents('.card');
+        $target.hide('slow', function(){ $target.remove(); });
+      })
+      function on(){
+            document.getElementById("overlay").style.display = "block";
+          }
 
-        $('input[type="radio"]').click(function(){
-            selected_club = $(this).closest('div').attr('id');
-            $('#selected_club').val(selected_club);
-            
-        });
-        
-        $('.event_option').click(function(){
-          var cls = '.'+this.id;
-          $('.about_event').css("display","none");
-          $(cls).css("display","block");
-          $('#selected_event').val(this.id);
-        });
-  </script>
+          function off(){
+            document.getElementById("overlay").style.display = "none";
+          }
+
+          $('.club_option').click(function(){
+            var cls = '.'+this.id;
+            $('#initial_poster_joinClub').css("display","none");
+            $('.about_club').css("display","none");
+            $(cls).css("display","block");
+          });
+          
+          $('.event_option').click(function(){
+            var cls = '.'+this.id;
+            $('#initial_poster_RegisterEvent').css("display","none");
+            $('.about_event').css("display","none");
+            $(cls).css("display","block");
+            $('#selected_event').val(this.id);
+          });
+
+          $('input[type="radio"]').click(function(){
+              selected_club = $(this).closest('div').attr('id');
+              $('#selected_club').val(selected_club);
+              
+          });
+          
+          $('.event_option').click(function(){
+            var cls = '.'+this.id;
+            $('.about_event').css("display","none");
+            $(cls).css("display","block");
+            $('#selected_event').val(this.id);
+          });
+
+          var post_files;
+          var event_files;
+          window.post_files ="";
+          window.event_files ="";
+          function ValidateSize(file,loc) 
+          {
+              var FileSize = file.files[0].size / 1024 / 1024;
+              if(loc == "organize_event")
+              {
+                x = document.getElementById('event_files');  
+                if (FileSize > 3) {
+                  alert('File size exceeds 3 MB');
+                  this.value = "";
+                 // $(file).val(''); //for clearing with Jquery
+                }
+                else
+                {
+                  event_files = event_files + file.files[0].name +" "; 
+                  x.innerHTML = event_files;
+                }
+              }
+              else if(loc == "add_post")
+              {
+                x = document.getElementById('post_files');  
+                if (FileSize > 3) {
+                  alert('File size exceeds 3 MB');
+                  this.value = "";
+                 // $(file).val(''); //for clearing with Jquery
+                }
+                else
+                {
+                  post_files = post_files + file.files[0].name +" "; 
+                  x.innerHTML = post_files;
+                }
+              }
+                 
+          }
+    </script>
 </body>
 
 </html>

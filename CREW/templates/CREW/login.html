@@ -16,14 +16,19 @@
     {
       overflow-x: hidden;
     }
-    
+    .card{
+      transition: 0.3s;
+    }
+    .card:hover {
+       box-shadow: 0 8px 16px 5px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2">
     <div class="container">
-      <a href="index.html" class="navbar-brand"> <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/49/IIIT_Sri_City_Logo.png/220px-IIIT_Sri_City_Logo.png" style="width: 32px; height: 32px; margin-right: 8px;">Student Club Management System</a>
+      <a href="/" class="navbar-brand"> <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/49/IIIT_Sri_City_Logo.png/220px-IIIT_Sri_City_Logo.png" style="width: 32px; height: 32px; margin-right: 8px;">Student Club Management System</a>
     </div>
   </nav>
 
@@ -49,56 +54,80 @@
     <div class="tab-content">
       <div id="home" class="container tab-pane active" style="padding: 35px 60px 85px 100px;"><br>
         <h2 class="text-center">ALL ABOUT IT!</h2>
-        <p style="text-align: center;">CREWS - Student Club Management System allows an individual to join or leave a club. One can register themselves for events organized. It always keeps you updated with the posts and show you the notifications about events. Each club has an admin who can organize events and conduct polls. The Super Admin of the application can only add / remove clubs.</p>
+        <hr>
+        <p style=" text-align: justify;text-justify: inter-word;font-size: 18px;">CREWS - Student Club Management System is an application used by students, faculty and staff to schedule and manage events of student clubs at <a href="https://iiits.ac.in" target="_blank">Indian Institute of Information Technology, Sri City.</a>
+        It enables club administrators to interact with the participants in their respective clubs. All the announcements, polls etc. are handled easily.
+
+        <br><br>
+        Made under the guidance of <a href="#">Uma Garimella</a>, <a href="#">Dr. Subramaniam</a> and <a href="#">Nagesh Kolagani</a>.
+        </p>
+        <hr>
+
       </div>
       <div id="menu1" class="container tab-pane fade"><br>
         <div class="container">
-          <div class="row">
-              <div class="col-md-4 mx-auto my-3" >
-                  <div class="card" style="height: 165px; width: 150px;margin-left: 50px; border: none;">
-                      <img class="rounded-circle mx-auto mt-3" src="/media/vinoothna_dp.jpg" style="border-radius: 50%;width: 130px;height: 130px;" alt="Card image cap">
-                      <div class="card-body">
-                        <h5 class="card-title text-center">Vinoothna</h5>
-                      </div>
-                  </div>
+          <div class="row justify-content-center" style="margin-top: 30px;">
+            
+            <div class="col-md-4" style="margin-bottom: 30px;">
+              <div class="card">
+                <div class="card-body" style="text-align: center">
+                  <h5 class="card-title">Vinoothna</h5>
+                  <hr>
+                  <a href="https://www.facebook.com/kinnera.vinoothna" target="_blank" class="card-link"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" title="vinoothna.kinnera@gmail.com" class="card-link"><i class="far fa-envelope"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-linkedin"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-github"></i></a>
+                </div>
               </div>
-
-              <div class="col-md-4 mx-auto my-3">
-                  <div class="card" style="height: 165px; width: 150px;margin-left: 30px;border: none;">
-                      <img class="rounded-circle mx-auto mt-3" src="https://images.pexels.com/photos/589802/pexels-photo-589802.jpeg?auto=compress&cs=tinysrgb&h=350" style="border-radius: 50%;width: 130px;height: 130px;" alt="Card image cap">
-                      <div class="card-body">
-                        <h5 class="card-title text-center">Chandhana</h5>
-                      </div>
-                    </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 30px;">
+              <div class="card">
+                <div class="card-body" style="text-align: center">
+                  <h5 class="card-title">Chandhana</h5>
+                  <hr>
+                  <a href="#" class="card-link"><i class="far fa-envelope"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-linkedin"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-github"></i></a>
+                </div>
               </div>
-
-              <div class="col-md-4 mx-auto my-3">
-                  <div class="card" style="height: 165px; width: 165px; border: none;">
-                      <img class="rounded-circle mx-auto mt-3" src="/media/prudhvi_dp.JPG" style="border-radius: 50%;width: 130px;height: 130px;" alt="Card image cap">
-                      <div class="card-body">
-                        <h5 class="card-title text-center">Prudhvi</h5>
-                      </div>
-                    </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 30px;">
+              <div class="card">
+                <div class="card-body" style="text-align: center">
+                  <h5 class="card-title">Prudhvi</h5>
+                  <hr>
+                  <a href="https://www.facebook.com/prudhvi.krishna.9" class="card-link"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="card-link"><i class="far fa-envelope"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-linkedin"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-github"></i></a>
+                </div>
               </div>
-
-              <div class="col-md-4 mx-auto my-3">
-                  <div class="card" style="height: 165px; width: 150px; margin-left: 50px;border: none;">
-                      <img class="rounded-circle mx-auto mt-3" src="https://images.pexels.com/photos/589802/pexels-photo-589802.jpeg?auto=compress&cs=tinysrgb&h=350" style="border-radius: 50%;width: 130px;height: 130px;" alt="Card image cap">
-                      <div class="card-body">
-                        <h5 class="card-title text-center">Rahul</h5>
-                      </div>
-                    </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 30px;">
+              <div class="card">
+                <div class="card-body" style="text-align: center">
+                  <h5 class="card-title">Rahul</h5>
+                  <hr>
+                  <a href="#" class="card-link"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="card-link"><i class="far fa-envelope"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-linkedin"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-github"></i></a>
+                </div>
               </div>
-
-              <div class="col-md-4 mx-auto my-3">
-                  <div class="card" style="height: 165px; width: 150px;margin-left: 30px;border: none;">
-                      <img class="rounded-circle mx-auto mt-3" src="https://images.pexels.com/photos/589802/pexels-photo-589802.jpeg?auto=compress&cs=tinysrgb&h=350" style="border-radius: 50%;width: 130px;height: 130px;" alt="Card image cap">
-                      <div class="card-body">
-                        <h5 class="card-title text-center">Sachin</h5>
-                      </div>
-                    </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 30px;">
+              <div class="card">
+                <div class="card-body" style="text-align: center">
+                  <h5 class="card-title">Sachin</h5>
+                  <hr>
+                  <a href="#" class="card-link"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="card-link"><i class="far fa-envelope"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-linkedin"></i></a>
+                  <a href="#" class="card-link"><i class="fab fa-github"></i></a>
+                </div>
               </div>
-
+            </div>
+          
           </div>  
         </div>
       </div>
@@ -114,7 +143,10 @@
                 <h4>Account Login</h4>
               </div>
               <div class="card-body">
-                <form action="login" method="POST">
+                <form action="{% url 'login' %}" method="POST">
+                  {% if error %}
+                      <p style="color:red"><i class="fas fa-exclamation-triangle"></i>&nbsp;{{error}}</p>
+                  {% endif %}
                   <div class="form-group">
                     <label for="email">Email</label>
                     {% csrf_token %}

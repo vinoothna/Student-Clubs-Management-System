@@ -9,16 +9,15 @@
     crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
-  {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A11</title>
+  <link rel="stylesheet" href="css/style.css">
+  <title>CREWS@IIITS</title>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
       <a href="/Club_Admin/{{user}}" class="navbar-brand"> 
-        <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
+        <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -27,7 +26,7 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a href="/Club_Admin/{{user}}" class="nav-link">
-              <i class="fas fa-home"></i> Home
+              <i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard
             </a>
           </li>
          
@@ -41,7 +40,7 @@
     </div>
   </nav>
 
-  <!-- HEADER --> 
+  <!-- HEADER 
   <header id="main-header" class="py-2 bg-primary text-white fixed-top" style="margin-top: 55px;">
     <div class="container">
       <div class="row">
@@ -51,9 +50,9 @@
         </div>
       </div>
     </div>
-  </header>
+  </header> -->
 
-  <!-- ACTIONS -->
+  <!-- ACTIONS 
   <section id="actions" class="py-4 mb-4 bg-light fixed-top" style="margin-top: 120px;">
     <div class="container">
       <div class="row">
@@ -62,7 +61,7 @@
             <i class="fas fa-arrow-left"></i> Back To Dashboard
           </a>
         </div>
-        <!--<div class="col-md-3">
+        <div class="col-md-3">
           <a href="#" class="btn btn-success btn-block">
             <i class="fas fa-lock"></i> Change Password
           </a>
@@ -71,19 +70,19 @@
           <a href="#" class="btn btn-danger btn-block">
             <i class="fas fa-trash"></i> Delete Account
           </a>
-        </div>-->
+        </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- PROFILE -->
-  <section id="profile" style="margin-top: 220px;">
+  <section id="profile" style="margin-top: 150px;">
     <div class="container">
       <div class="row">
         <div class="col-md-9">
           <div class="card">
-            <div class="card-header">
-              <h4>Edit Profile</h4>
+            <div class="card-header bg-dark">
+              <h4 style="color:white">Edit Profile</h4>
             </div>
             <div class="card-body">
               <form method = "POST" action = "/EditDetails_club_admin">
@@ -101,22 +100,27 @@
                   <input type="hidden" name="ca_id" value='{{ club_admin_data.id }}'>
                   <textarea  class="form-control" name="BIO">{{club_admin_data.user_bio}}</textarea>
                 </div>
-                <button  type = "submit" class="btn btn-success btn-block" ><i class="fas fa-lock"></i> save </button>
+                <button  type = "submit" class="btn btn-outline-dark btn-block" ><i class="fas fa-lock"></i> Save Changes </button>
               </form>
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3 text-center">
                 
-                <img src="/media/{{club_admin_data.user_dp}}" alt="{{club_admin_data.user_name}}" class="" height = '200' width = '255' style="border-radius: 12px;box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                <h3>Your Avatar</h3>
-                
-                <input type = "button" class="btn btn-primary btn-block" value="Edit Image" name = "EditImage" data-toggle="modal" data-target="#exampleModal">
+              {% if club_admin_data.user_dp %}  
+                <img src="/media/{{club_admin_data.user_dp}}" alt="{{club_admin_data.user_name}}" class="" height = '200' width = '200' style="border-radius: 50%;box-shadow: 0 2px 10px rgba(0,0,0,0.5);margin-top:35px;margin-bottom: 20px">
+              {% else %}
+                <img src="/media/avatar.png" alt="{{admin_data.user_name}}" class="" height = '200' width = '200' style="border-radius: 50%;box-shadow: 0 2px 10px rgba(0,0,0,0.5);margin-top:35px;margin-bottom: 20px">
+              {% endif %}
 
+                <button class="btn btn-outline-dark btn-block" name = "EditImage" data-toggle="modal" data-target="#exampleModal" style="width:150px;margin-left: 50px;">
+                  <i class="fa fa-pencil"></i>Edit Image
+                </button>
+                <br>
                 <form method = "POST" action = "/DelImage_club_admin">
                   {% csrf_token %}
                   <input type="hidden" name="ca_id" value='{{ club_admin_data.id }}'>
-                  <button type = "submit" class="btn btn-danger btn-block">Delete Image</button>
+                  <button type = "submit" class="btn btn-outline-dark btn-block" style="width:150px;margin-left: 50px;">Delete Image</button>
                 </form>
         </div>
       </div>

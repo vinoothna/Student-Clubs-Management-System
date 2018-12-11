@@ -11,14 +11,14 @@
     crossorigin="anonymous">
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A11</title>
+  <title>CREWS@IIITS</title>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
-      <a href="/student/{{stud}}" class="navbar-brand"> 
-        <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
+      <a href="/student/{{stud}}" class="navbar-brand" style="font-size: 25px;">
+          <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -27,7 +27,7 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a href="/student/{{stud}}" class="nav-link">
-              <i class="fas fa-home"></i> Home
+              <i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard
             </a>
           </li>
          
@@ -41,46 +41,15 @@
     </div>
   </nav>
 
-  <!-- HEADER -->
-  <header id="main-header" class="py-2 bg-primary text-white fixed-top" style="margin-top: 55px;">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h1>
-            <i class="fas fa-user"></i> Edit Profile</h1>
-        </div>
-      </div>
-    </div>
-  </header> 
-
-  <!-- ACTIONS -->
-  <section id="actions" class="py-4 mb-4 bg-light fixed-top" style="margin-top: 120px;">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-3">
-          <a href="/student/{{stud}}" class="btn btn-light btn-block">
-            <i class="fas fa-arrow-left"></i> Back To Dashboard
-          </a>
-        </div>
-        <!-- <div class="col-md-3">
-          <a href="#" class="btn btn-success btn-block">
-            <i class="fas fa-lock"></i> Change Password
-          </a>
-        </div> -->
-        <div class="col-md-3">
-        </div>
-      </div>
-    </div>
-  </section>
-
+  
   <!-- PROFILE -->
-  <section id="profile" style="margin-top: 220px;">
+  <section id="profile" style="margin-top: 150px;">
     <div class="container">
       <div class="row">
         <div class="col-md-9">
           <div class="card">
-            <div class="card-header">
-              <h4>Edit Profile</h4>
+            <div class="card-header bg-dark">
+              <h4 style="color: white">Edit Profile</h4>
             </div>
             <div class="card-body">
               <form method = "POST" action = "/EditDetails">
@@ -98,29 +67,38 @@
                   <input type="hidden" name="s_id" value='{{ student_data.id }}'>
                   <textarea  class="form-control" name="BIO">{{student_data.user_bio}}</textarea>
                 </div>
-                <button  type = "submit" class="btn btn-success btn-block" ><i class="fas fa-lock"></i> save </button>
+                <button  type = "submit" class="btn btn-outline-dark btn-block" >
+                  <i class="fas fa-lock"></i> Save Changes 
+                </button>
               </form>
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
-                <!-- {{student_data.user_dp}} -->
-                <img src="/media/{{student_data.user_dp}}" alt="{{student_data.user_name}}" class="" height = '200' width = '255' style="border-radius: 12px;box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                <h3>Your Avatar</h3>
-                
-                <input type = "button" class="btn btn-primary btn-block" value="Edit Image" name = "EditImage" data-toggle="modal" data-target="#exampleModal">
+              <div class="col-md-3 text-center" >
 
+              {% if student_data.user_dp %}
+                <img src="/media/{{student_data.user_dp}}" alt="{{student_data.user_name}}" height = '200' width = '200' style="border-radius: 50%;box-shadow: 0 2px 10px rgba(0,0,0,0.5);margin-top:35px;margin-bottom: 20px">
+              {% else %}
+                <img src="/media/avatar.png" alt="{{admin_data.user_name}}" class="" height = '200' width = '200' style="border-radius: 50%;box-shadow: 0 2px 10px rgba(0,0,0,0.5);margin-top:35px;margin-bottom: 20px">
+              {% endif %}
+
+                <button class="btn btn-outline-dark btn-block" name = "EditImage" data-toggle="modal" data-target="#exampleModal" style="width:150px;margin-left: 50px;">
+                  <i class="fa fa-pencil"></i>Edit Image
+                </button>
+                
+                <br>
                 <form method = "POST" action = "/DelImage">
                     {% csrf_token %}
-                  <input type="hidden" name="s_id" value='{{ student_data.id }}'>
-                  <button type = "submit" class="btn btn-danger btn-block">Delete Image</button>
+                  <input type="hidden" name="s_id" value='{{ student_data.id}}'>
+                  <button type = "submit" class="btn btn-outline-dark btn-block" style="width:150px;margin-left: 50px;">Delete Image
+                  </button>
                 </form>
         </div>
       </div>
     </div>
   </section>
   <!-- FOOTER -->
-  <footer id="main-footer" class="bg-dark text-white mt-5 p-0 fixed-bottom">
+  <footer id="main-footer" class="bg-dark text-white mt-5 p-1 fixed-bottom">
     <div class="container">
       <div class="row">
         <div class="col">
@@ -137,7 +115,7 @@
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header bg-light">
         <h5 class="modal-title" id="exampleModalLabel">Choose a profile picture</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -149,11 +127,8 @@
           {% csrf_token %}
           <input type="hidden" name="s_id" value='{{ student_data.id }}'>
           <input type="file" name="pic">
-          <!-- <input type="submit" class="btn btn-success" value="submit"> -->
-        
-      
           <div class="modal-footer">
-            <input type="submit" class="btn btn-success" value="Choose">
+            <input type="submit" class="btn btn-outline-dark" value="Choose">
           </div>
         </form>
       </div>

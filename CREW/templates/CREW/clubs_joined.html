@@ -11,36 +11,26 @@
     crossorigin="anonymous">
   {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A11 Frontend</title>
+  <title>CREWS@IIITS</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
-      <a href="/student/{{id}}" class="navbar-brand">
-        <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
+      <a href="/student/{{id}}" class="navbar-brand" style="font-size: 25px;">
+          <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a href="/student/{{id}}" class="nav-link">
-              <i class="fas fa-home"></i> Home
+              <i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard
             </a>
           </li>
-          <li class="nav-item">
-           <!--<form action="" style="display: inline;" method="POST">
-                    {% csrf_token %}
-                    <input type="text" value="{{user.id}}" style="display:none" name="s_id">
-                    <button type="submit" style="text-decoration: none; color: rgba(255,255,255,.5);" class="btn btn-link"><i class="fas fa-user" style="color: rgba(255,255,255,.5);"></i>Profile</button>
-              </form>-->
-            <a href="/student_profile/{{id}}" class="nav-link">
-              <i class="fas fa-user"></i> Profile
-            </a>
-          </li>
+         
           <li class="nav-item">
             <a href="/" class="nav-link">
               <i class="fas fa-user-times"></i> Logout
@@ -51,48 +41,25 @@
     </div>
   </nav>
 
-  <!-- HEADER -->
-  <header id="main-header" class="py-2 bg-success text-white fixed-top" style="margin-top: 55px">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h2>
-            <i class="fas fa-folder"></i>&nbsp;Clubs joined</h2>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- SEARCH -->
-  <section id="search" class="py-4 mb-4 bg-light fixed-top" style="margin-top: 110px">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <a href="/student/{{id}}" class="btn btn-light btn-block">
-            <i class="fas fa-arrow-left"></i> Back To Dashboard
-          </a>
-        </div>
-       
-      </div>
-    </div>
-  </section>
-
+  
   <!-- EVENTS -->
-  <section id="categories" style="margin-top:215px">
+  <section id="categories" style="margin-top:150px">
     <div class="container">
       <div class="row">
         <div class="col">
           <div class="card">
-            
-            <table class="table table-striped">
+            <table class="table">
               <thead class="thead-dark">
                 <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Date</th>
+                  <th colspan="3"><h4>Clubs Joined</h4></th>
                 </tr>
               </thead>
-               <tbody>
+              <tr class="bg-light">
+                <th>Id</th>
+                <th>Title</th>
+                <th>Date</th>
+              </tr>
+              <tbody>
                {% for i in clubs_joined %}
                   {% for j in clubs %}
                      {% if i.club_id.id == j.id %} 

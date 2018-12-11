@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +15,21 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A11 Frontend</title>
+  <title>CREWS@IIITS</title>
   <style>
+    #ringing_bell
+      {
+        animation: moveIt 2.5s ease-in-out infinite;
+        display:inline-block;
+      }
+      @keyframes moveIt {
+        0%, 100% {
+          transform: rotate(45deg);
+        }
+        50% {
+          transform: rotate(-45deg);
+        }
+      }
     select {
       font-family: 'FontAwesome', 'Second Font name';
     }
@@ -33,6 +45,26 @@
       top: 0;
       opacity: 0;
     }
+    ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        #no_notif,#poll
+      {
+        background-color: #c75858;
+        border-radius: 24px;
+        box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, .3);
+        color: #fff;
+        cursor: default;
+        font-size: 13px;
+        height: 24px;
+        line-height: 24px;
+        position: absolute;
+        right: 4px;
+        text-align: center;
+        top: -7px;
+        width: 24px;
+      }
   </style>
 </head>
 
@@ -40,7 +72,7 @@
   <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark p-2">
     <div class="container">
       <!-- CHANGE THE HREFS -->
-      <a href="/Super_Admin/{{user}}" class="navbar-brand">
+      <a href="/Super_Admin/{{user.id}}" class="navbar-brand">
         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/49/IIIT_Sri_City_Logo.png/220px-IIIT_Sri_City_Logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -50,13 +82,13 @@
         
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="/Super_Admin/{{user}}" class="nav-link">
+            <a href="/Super_Admin/{{user.id}}" class="nav-link">
               <i class="fas fa-home"></i> Home
             </a>
           </li>
           
           <li class="nav-item">
-            <a href="/admin_profile/{{user}}" class="nav-link">
+            <a href="/super_admin_profile/{{user.id}}" class="nav-link">
               <i class="fas fa-user"></i> {{user.user_name}}
             </a>
           </li>
@@ -70,6 +102,7 @@
     </div>
   </nav>
 
+  
   <!-- ACTIONS -->
     <section id="actions" class="py-4 mb-4 bg-dark fixed-top" style="margin-top: 75px">
       <div class="container">
@@ -101,7 +134,14 @@
           </div>
           <div class="col-md-2">
             <a href="#" class="btn btn-light btn-block" data-toggle="modal" data-target="#notificationModal">
-              <i class="fas fa-bell"></i> &nbsp;Notifications
+              {% if new_notif_no != 0 %}  
+                  <i class="fas fa-bell" id="ringing_bell"></i>
+                  <span id="no_notif">
+                    {{new_notif_no}}
+                  </span>
+                {% else %}
+                  <i class="fas fa-bell" id="bell"></i>
+                {% endif %}&nbsp;Notifications
             </a>
           </div>
 
@@ -110,44 +150,206 @@
     </section>
 
   <!-- POSTS -->
-  <section id="posts" style="margin-top: 175px">
+  <section id="posts" style="margin-top: 150px">
     <div class="container">
-      <div class="row">
-        <div class="col-md-9"  style="background-color: rgba(0,0,0,0.1)">
-          <div class="card">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center bg-primary text-white mb-3 flash_card" >
-            <div class="card-body">
-              <h5>Clubs</h5>
-              <h4 class="display-6">
-                <i class="fas fa-users"></i> {{clubs_no}}
-              </h4>
-              <a href="/all_clubs/{{usr}}" class="btn btn-outline-light btn-sm">View</a>
-            </div>
-          </div>
+      <div class="row justify-content-center">
+        <!-- FEED -->
+          <div class="col-md-7" style="border:none;">
+            <div class="card mt-4" style="overflow-y: auto;height: 60vh;border:none;padding:10px;">
+              <b><p><i>Post by others</i><p></b>
+                  {% if posts %}  
+                    {% for i in posts %}
+                      <div style="border-radius: 2px;margin-bottom: 15px;padding:20px;box-shadow: 0 0 20px rgba(0,0,0,0.2)">
+                        {% if i.posted_by_id.user_dp %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src = "{{i.posted_by_id.user_dp.url}}";>
+                        {% else %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="/media/avatar.png">
+                        {% endif %}
+                        <b><p style="margin-top: 1px;font-size: 18px;">{{i.posted_by_id.user_name}}<br><small>{{i.post_datetime}}</small></p></b>
+                        <hr>
 
-          <div class="card text-center bg-success text-white mb-3 flash_card">
-            <div class="card-body">
-              <h5>Events</h5>
-              <h4 class="display-6">
-                <i class="fas fa-folder"></i> {{events_count}}
-              </h4>
-              <a href="/club_events_admin/{{usr}}" class="btn btn-outline-light btn-sm">View</a>
-            </div>
-          </div>
+                        <b><p style="">{{i.post_title}}</p></b>
+                        <p>{{i.content}}</p>
+                        
+                        <div style="width:40vw;max-height:400px;margin-bottom: 30px;display:inline-flex;flex-direction: row;overflow-x: auto;overflow-y: hidden;padding-bottom: 5px;">
+                          {% for j in posts_media %}
+                            {% if i.id == j.post_id.id %}
+                              <div>                         
+                                <img src="{{media_url}}{{j.media}}" style="width: 40vw;height: 330px">
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                        
+                        <form method="POST" action="{% url 'like' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                          <input type="submit" value="&#xf164" name="like" class="far fa-thumbs-up" id="like" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">  
+                        </form>
 
-          <div class="card text-center bg-warning text-white mb-3 flash_card">
-            <div class="card-body">
-              <h5>My Posts</h5>
-              <h4 class="display-6">
-                <i class="fas fa-pencil-alt"></i> {{myposts_count}}
-              </h4>
-              <a href="/super_admin_posts/{{usr}}" class="btn btn-outline-light btn-sm">View</a>
+                        <form method="POST" action="{% url 'dislike' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                          <input type="submit" value="&#xf165" name="like" class="far fa-thumbs-down" id="dislike" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">        
+                        </form>
+
+                        <hr>
+                        <form method="POST" action="{% url 'comments' %}">
+                          {% csrf_token %}
+                          <div class="input-group mt-2">
+                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content' style="border-radius: 20px;">
+                             <span class="input-group-btn">
+                                  <!--<input class="btn btn-default" value="Comment" type="submit">-->
+                                  <button type="submit" style="background-color: transparent;border:none;transform: scale(1.6);margin: 5px;cursor: pointer;">
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                  </button>
+                                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                                  <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                             </span>
+                          </div>
+                        </form>
+                        
+                        <br>
+                        {% for j in post_comments %} 
+                          {% if i.id == j.post_id.id %}
+                            <div class="media mb-4">
+                              <img class="d-flex mr-3 rounded-circle" src="" alt="" width="30" height="30" style="background-image: url('{{j.user_id.user_dp.url}}');">
+                              <div class="media-body">
+                                <h6 class="mt-0">{{j.user_id.user_name}}</h6>
+                                <p>{{j.content}}</p>
+                              </div>
+                            </div>
+                          {% endif %}  
+                        {% endfor %}                  
+                      </div>
+                      
+                    {% endfor %}
+                  {% else %}
+                    <p>No posts here</p>
+                  {% endif %}
+                  <hr>
+                  
+                  <b><p><i>My Posts</i><p></b>
+                  {% if my_posts %}
+                    {% for i in my_posts %}
+                      <div style="border-radius: 2px;margin-bottom: 15px;padding:20px;box-shadow: 0 0 20px rgba(0,0,0,0.2)">
+                        {% if i.posted_by_id.user_dp %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src = "{{i.posted_by_id.user_dp.url}}";>
+                        {% else %}
+                          <img style="width:55px;height:55px;float: left;border-radius: 50%;margin-right: 15px;" src="/media/avatar.png">
+                        {% endif %}
+                        <b><p style="margin-top: 1px;font-size: 18px;">{{i.posted_by_id.user_name}}<br><small>{{i.post_datetime}}</small></p></b>
+                        <hr>
+
+                        <b><p style="">{{i.post_title}}</p></b>
+                        <p>{{i.content}}</p>
+                        
+                        <div style="width:40vw;max-height:400px;margin-bottom: 30px;display:inline-flex;flex-direction: row;overflow-x: auto;overflow-y: hidden;padding-bottom: 5px;">
+                          {% for j in posts_media %}
+                            {% if i.id == j.post_id.id %}
+                              <div>                         
+                                <img src="{{media_url}}{{j.media}}" style="width: 40vw;height: 330px">
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                        
+                        <form method="POST" action="{% url 'like' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                              <input type="submit" value="&#xf164" id="" name="like" class="far fa-thumbs-up" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">  
+                              
+                        </form>
+
+                        <form method="POST" action="{% url 'dislike' %}" style="display: inline-block;">
+                          {% csrf_token %}
+                          <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                          <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                          <input type="submit" value="&#xf165" name="like" class="far fa-thumbs-down" style="background-color: transparent;border:none;transform: scale(1.3);cursor: pointer;">        
+                        </form>
+
+                        <hr>
+                        <form method="POST" action="{% url 'comments' %}">
+                          {% csrf_token %}
+                          <div class="input-group mt-2">
+                             <input type="text" class="form-control" placeholder="Leave a comment" name ='comment_content' style="border-radius: 20px;">
+                             <span class="input-group-btn">
+                                  <!--<input class="btn btn-default" value="Comment" type="submit">-->
+                                  <button type="submit" style="background-color: transparent;border:none;transform: scale(1.6);margin: 5px;cursor: pointer;">
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                  </button>
+                                  <input type="number" name="ca_id" value="{{user.id}}" style="display:none">
+                                  <input  value="{{i.id}}" type="number" name ='post_id' style="display: none;">
+                             </span>
+                          </div>
+                        </form>
+                        
+                        <br>
+                        {% for j in post_comments %} 
+                          {% if i.id == j.post_id.id %}
+                            <div class="media mb-4">
+                              <img class="d-flex mr-3 rounded-circle" src="" alt="" width="30" height="30" style="background-image: url('{{j.user_id.user_dp.url}}');">
+                              <div class="media-body">
+                                <h6 class="mt-0">{{j.user_id.user_name}}</h6>
+                                <p>{{j.content}}</p>
+                              </div>
+                            </div>
+                          {% endif %}  
+                        {% endfor %}                  
+                      </div>
+                      
+                    {% endfor %}
+                  {% else %}
+                    <p>No posts here</p>
+                  {% endif %}
             </div>
           </div>
-        </div>
+        
+        <!-- FLASH CARDS -->
+          <div class="col-md-3">
+            <br>
+            <div class="card text-center bg-primary text-white mb-3 flash_card" style="width:200px;margin-top: 15px;">
+              <div class="card-body" style="margin-bottom: 30px;">
+                <h5>Clubs In</h5>
+                    <h4 class="display-6">
+                      <i class="fas fa-users"></i> {{clubs_no}}
+                    </h4>
+                      
+                     <form action="{% url 'SA_clubs' %}" method="POST">
+                        {% csrf_token %}    
+                        <input type="text" value="{{user.id}}" style="display:none" name="sa_id">
+                        <input type="submit" value="View" class="btn btn-outline-light btn-sm">
+                      </form>
+              </div>
+            </div>
+
+            <div class="card text-center bg-success text-white mb-3 flash_card" style="width:200px;">
+              <div class="card-body">
+                <h5>Events</h5>
+                <h4 class="display-6">
+                  <i class="fas fa-folder"></i> {{events_no}}
+                </h4>
+                <form action="{% url 'SA_events' %}" method="POST">
+                        {% csrf_token %}    
+                        <input type="text" value="{{user.id}}" style="display:none" name="sa_id">
+                        <input type="submit" value="View" class="btn btn-outline-light btn-sm">
+                      </form>
+              </div>
+            </div>
+
+            <div class="card text-center bg-warning text-white mb-3 flash_card" style="width:200px;">
+              <div class="card-body">
+                <h5>My Posts</h5>
+                <h4 class="display-6">
+                  <i class="fas fa-pencil-alt"></i> {{myposts_count}}
+                </h4>
+                <a href="/super_admin_posts/{{user.id}}" class="btn btn-outline-light btn-sm">View</a>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </section>
@@ -193,20 +395,21 @@
                 <div class="form-group">
                   <label for="image">T&amp;C Document </label>
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image" name="tc_doc">
-                    <label for="image" class="custom-file-label">--Choose File--</label>
+                    <input type="file" onchange="ValidateSize(this,'add_club_T&C')" class="custom-file-input" id="image" name="tc_doc" required>
+                    <label for="image" class="custom-file-label" id="club_T&C">--Choose File--</label>
                   </div>
                   <small class="form-text text-muted">Max Size 3mb</small>
                 </div>
                 <div class="form-group">
                   <label for="image">Icon </label>
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image" name="club_icon">
-                    <label for="image" class="custom-file-label">--Choose Image--</label>
+                    <input type="file" onchange="ValidateSize(this,'club_icon')" class="custom-file-input" id="image" name="club_icon" required>
+                    <label for="image" class="custom-file-label" id="club_icon">--Choose Image--</label>
                   </div>
                   <small class="form-text text-muted">Max Size 3mb</small>
                   <input type="number" value="{{user.id}}" name="sa_id" style="display: none">
-                  <input type="submit" class="btn btn-primary" value="Add">
+                  <hr>
+                  <input type="submit" class="btn btn-primary btn-block" value="Add">
                 </div>
               </form>
             </div>
@@ -238,7 +441,8 @@
                           {% endfor %}                       
                   </select>
                   <input type="number" value="{{user.id}}" name="sa_id" style="display: none">
-                  <input type="submit" class="btn btn-success" value="Remove" style="align-items: right ">
+                  <hr>
+                  <input type="submit" class="btn btn-success btn-block" value="Remove" style="align-items: right ">
                 </div>
                 
               </form>
@@ -261,28 +465,16 @@
               <div class="modal-body">
                 {% csrf_token %}
                 <form action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data"> 
+                  {% csrf_token %}
                   <div class="form-group">
                     <label for="title" >Title</label>
                     <input type="text" name='post_title' class="form-control">
                   </div>
                   <div class="form-group">
-                    <label for="category">Club</label>
-                    {% csrf_token %}
-                    <select class="form-control" name="Club">
-                      {% for i in clubs_joined %}
-                        {% for j in clubs %}
-                          {% if i == j.id %}
-                            <option value="{{j.club_name}}">{{j.club_name}}</option>
-                          {% endif %}
-                        {% endfor %}
-                      {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <label for="image">Choose File</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="image" name="File" multiple>
-                      <label for="image" class="custom-file-label">--File--</label>
+                      <input type="file" class="custom-file-input" id="image" name="File" multiple onchange="ValidateSize(this,'post_files')">
+                      <label for="image" class="custom-file-label" id="post_files">--File--</label>
                     </div>
                     <small class="form-text text-muted">Max Size 3mb</small>
                   </div>
@@ -293,6 +485,7 @@
                   <input type="number" value="{{user.id}}" style="display:none" name="sa_id">
                   <input type="submit" value="Post" class="btn btn-danger btn-block">
                 </form>
+              
               </div>
             </div>
           </div>
@@ -357,9 +550,9 @@
                           
                           </div>
                           <div class="col-md-2">   
-                            <select class="form-control" name="pollOption_type" style="width:64px;">
-                              <option value="Multiple">&#xf046;</option>
-                              <option value="Single">&#xf192;</option>
+                            <select class="form-control" name="pollOption_type" style="width:120px;">
+                              <option value="Multiple">Checkbox</option>
+                              <option value="Single">RadioBtn</option>
                             </select>
                             <a class="btn btn-light" id="add_poll_option">
                               <i class="fas fa-plus"></i>
@@ -396,54 +589,76 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Title</span>
+                <form action="{% url 'organize_event' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" >Title</span>
+                    </div>
+                    <input type="text" class="form-control" name="event_title" placeholder="Enter the title">
                   </div>
-                  <input type="text" class="form-control" placeholder="Enter the title">
-                </div>
-                <div class="form-group">
-                  <textarea name="editor1" class="form-control" placeholder="Description"></textarea>
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Start DateTime</span>
+                  <div class="form-group">
+                    <textarea class="form-control" placeholder="Description" name="event_description"></textarea>
                   </div>
-                  <input type="datetime-local" class="form-control" name="">
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">End DateTime&nbsp;</span>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Start DateTime</span>
+                    </div>
+                    <input type="datetime-local" class="form-control" name="start_datetime">
                   </div>
-                  <input type="datetime-local" class="form-control" name="">
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Room No.&nbsp;</span>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">End DateTime&nbsp;</span>
+                    </div>
+                    <input type="datetime-local" class="form-control" name="end_datetime">
                   </div>
-                  <select class="form-control">
-                    <option value="">101</option>
-                    <option value="">103</option>
-                    <option value="">105</option>
-                    <option value="">107</option>
-                    <option value="">113</option>
-                    <option value="">115</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="image">Choose File</label>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image">
-                    <label for="image" class="custom-file-label">--File--</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Room No.&nbsp;</span>
+                    </div>
+                    <select class="form-control" name="room">
+                      {% for r in rooms %}
+                        <option value="{{r.room_num}}">{{r.room_num}}</option>
+                      {% endfor %}
+                    </select>
                   </div>
-                  <small class="form-text text-muted">Max Size 3mb</small>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-info" data-target="#eventDescriptionModal" data-toggle="modal" data-dismiss="modal">Organize</button>
-            </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Type&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="type">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Host&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="host">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Limit&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="limit">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Duration&nbsp;</span>
+                    </div>
+                    <input type="text" class="form-control" name="duration">
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Choose File</label>
+                    <div class="custom-file">
+                      <input type="file" onchange="ValidateSize(this,'organize_event')" class="custom-file-input" id="image" name="event_media">
+                      <label for="image" class="custom-file-label" id="event_files">--File--</label>
+                    </div>
+                    <small class="form-text text-muted">Max Size 3mb</small>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="submit" class="btn btn-info btn-block"  data-toggle="modal" value='Organize'>
+                   </div>
+                </form>
+              </div>
           </div>
         </div>
       </div>
@@ -458,39 +673,34 @@
                 <form action="{% url 'notifications_seen' %}" method="POST" >
                   {% csrf_token %}
                   <input type="number" name="sa_id" value="{{user.id}}" style="display:none">
-                  <input type="submit" class="close" value="&times;">
+                  <button type="submit" class="btn bg-dark">
+                    <i class="fa fa-times" aria-hidden="true" style="color: white;font-size:20px"></i>
+                  </button>
                 </form>
               </div>
                 
               <div class="modal-body">
-                <h5> New </h5>
+                <b><h5> NEW </h5></b>
                 <hr>
                 <br>
                 {% for notif in new_notifications %}
                   <div class="card">
                     <div class="card-body">
-                      <button class="close">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                      <h5 class="card-title">{{notif.notification_content}}</h5>
+                      <b><p class="card-title">{{notif.notification_content}}</p></b>
                       <p class="card-text">{{notif.notification_datetime}}</p>
                     </div>
                   </div>
-                  <br>
                 {% endfor %}
-                <h5> Earlier </h5>
+                <br>
+                <h5> EARLIER </h5>
                 <hr>
                 {% for notif in old_notifications %}
                   <div class="card">
                     <div class="card-body">
-                      <button class="close">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                      <h5 class="card-title">{{notif.notification_content}}</h5>
-                      <p class="card-text">{{notif.notification_datetime}}</p>
+                      <b><h6 class="card-title">{{notif.notification_content}}</h6></b>
+                      <p class="card-text"style="font-size: 14px">{{notif.notification_datetime}}</p>
                     </div>
                   </div>
-                  <br>
                 {% endfor %}
               </div>
             </div>
@@ -532,6 +742,80 @@
       var $target = $(this).parents('.card');
       $target.hide('slow', function(){ $target.remove(); });
     })
+
+    var post_files;
+    var event_files;
+    var club_TC_files;
+    var club_icon_files;
+    window.post_files ="";
+    window.event_files ="";
+    window.club_TC_files ="";
+    window.club_icon_files ="";
+    function ValidateSize(file,loc) 
+    {
+        var FileSize = file.files[0].size / 1024 / 1024;
+        if(loc == "add_club_T&C")
+        {
+          x = document.getElementById('club_T&C');  
+          if (FileSize > 3) {
+            alert('File size exceeds 3 MB');
+            this.value = "";
+           // $(file).val(''); //for clearing with Jquery
+          }
+          else
+          {
+            club_TC_files = club_TC_files + file.files[0].name +" "; 
+            x.innerHTML = club_TC_files;
+          }
+        }
+        else if(loc == "club_icon")
+        {
+          x = document.getElementById('club_icon');  
+          if (FileSize > 3) {
+            alert('File size exceeds 3 MB');
+            this.value = "";
+           // $(file).val(''); //for clearing with Jquery
+          }
+          else
+          {
+            club_icon_files = club_icon_files + file.files[0].name +" "; 
+            x.innerHTML = club_icon_files;
+          }
+        }
+        else if(loc == "post_files")
+        {
+          x = document.getElementById('post_files');  
+          if (FileSize > 3) {
+            alert('File size exceeds 3 MB');
+            this.value = "";
+           // $(file).val(''); //for clearing with Jquery
+          }
+          else
+          {
+            post_files = post_files + file.files[0].name +" "; 
+            x.innerHTML = post_files;
+          }
+        }
+        else if(loc == "organize_event")
+        {
+          x = document.getElementById('event_files');  
+          if (FileSize > 3) {
+            alert('File size exceeds 3 MB');
+            this.value = "";
+           // $(file).val(''); //for clearing with Jquery
+          }
+          else
+          {
+            event_files = event_files + file.files[0].name +" "; 
+            x.innerHTML = event_files;
+          }
+        }
+           
+    }
+
+
+
+
   </script>
 </body>
 

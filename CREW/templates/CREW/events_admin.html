@@ -11,14 +11,14 @@
     crossorigin="anonymous">
   {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'CREW/style.css' %}">
-  <title>A07 Frontend</title>
+  <title>CREWS@IIITS</title>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-2 fixed-top">
     <div class="container">
-      <a href="CA_index.html" class="navbar-brand">
-        <!--<img src="./img/logo.png" style="height: 60px;width: 60px">&nbsp;-->Student Club Management System
+      <a href="/Club_Admin/{{user}}" class="navbar-brand">
+        <img src="/media/logo.png" style="height: 60px;width: 60px">&nbsp;Student Club Management System
       </a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -26,17 +26,12 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="CA_index.html" class="nav-link">
-              <i class="fas fa-home"></i> Home
+            <a href="/Club_Admin/{{user}}" class="nav-link">
+              <i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard
             </a>
           </li>
           <li class="nav-item">
-            <a href="profile_admin.html" class="nav-link">
-              <i class="fas fa-user"></i> Profile
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="login.html" class="nav-link">
+            <a href="/" class="nav-link">
               <i class="fas fa-user-times"></i> Logout
             </a>
           </li>
@@ -45,99 +40,33 @@
     </div>
   </nav>
 
-  <!-- HEADER -->
-  <header id="main-header" class="py-2 bg-success text-white fixed-top" style="margin-top:55px">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h2>
-            <i class="fas fa-folder"></i>&nbsp;Events Organized</h2>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- SEARCH -->
-  <section id="search" class="py-4 mb-4 bg-light fixed-top" style="margin-top: 110px">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <a href="CA_index.html" class="btn btn-light btn-block">
-            <i class="fas fa-arrow-left"></i> Back To Dashboard
-          </a>
-        </div>
-        <div class="col-md-6 ml-auto">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search Categories...">
-            <div class="input-group-append">
-              <button class="btn btn-success">Search</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- EVENTS -->
-  <section id="categories" style="margin-top: 215px">
+  <section id="categories" style="margin-top: 150px">
     <div class="container">
       <div class="row">
         <div class="col">
           <div class="card">
-            <table class="table table-striped">
+            <table class="table">
               <thead class="thead-dark">
-                <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Date</th>
-                  <th></th>
-                </tr>
+                <th colspan="3"><h4>Events Registered</h4></th>
               </thead>
+                <tr class="bg-light">
+                  <th>Id</th>
+                  <th>Event Title</th>
+                  <th>Date</th>
+                </tr>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Web Development</td>
-                  <td>May 10 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Tech Gadgets</td>
-                  <td>May 11 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Business</td>
-                  <td>May 13 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>Health & Wellness</td>
-                  <td>May 15 2018</td>
-                  <td>
-                    <a href="details.html" class="btn btn-secondary disabled">
-                      <i class="fas fa-angle-double-right"></i> Details
-                    </a>
-                  </td>
-                </tr>
-
+                {% for j in events %}
+                  <tr>
+                    <td>{{j.0}}</td>
+                    <td>{{j.1}}</td>
+                    <td>{{j.2}}</td>
+                  </tr>
+                {% endfor %}
               </tbody>
             </table>
-
           </div>
         </div>
       </div>
@@ -145,7 +74,7 @@
   </section>
   <br><br><br>
   <!-- FOOTER -->
-  <footer id="main-footer" class="bg-dark text-white mt-5 p-1">
+  <footer id="main-footer" class="bg-dark text-white mt-5 p-1 fixed-bottom">
     <div class="container">
       <div class="row">
         <div class="col">
