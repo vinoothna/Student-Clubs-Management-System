@@ -57,16 +57,12 @@
                 <th>Date</th>
               </tr>
               <tbody>
-                {% for i in events_registered %}
-                  {% for j in events %}
-                     {% if i.event_id.id == j.id %} 
+                {% for i in results %}                  
                         <tr>
-                          <td>{{i.event_id.id}}</td>
-                          <td>{{j.event_name}}</td>
-                          <td>{{j.event_start_datetime}}</td>
+                          <td>{{i.id}}</td>
+                          <td>{{i.event_name}}</td>
+                          <td>{{i.register_datetime}}</td>
                         </tr>
-                     {% endif %}
-                  {% endfor %}
                 {% endfor %}
               </tbody>
             </table>

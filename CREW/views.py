@@ -23,7 +23,7 @@ def login(request):
 		if user.objects.filter(user_email = email,user_password = password).exists():
 			usr = user.objects.get(user_email = email,user_password = password)
 			typ = usr.user_type
-			if(typ =='student'):
+			if(typ =='Student'):
 				return redirect('student',usr.id)
 			elif(typ == 'Club Admin'):
 				return redirect('Club_Admin',usr.id)
@@ -40,13 +40,13 @@ def dashboard(request,token):
 	email = student_details['student'][0]['Student_Email']
 	name = student_details['student'][0]['Student_First_Name'] 
 	if user.objects.filter(user_email=email).exists() == False:
-		user_data = user(user_name = name,user_email=email,user_type = 'student')
+		user_data = user(user_name = name,user_email=email,user_type = 'Student')
 		user_data.save()
 		typ = user_data.user_type
 	else:
 		user_data = user.objects.get(user_email = email) 
 		typ = user_data.user_type
-	if(typ =='student'):
+	if(typ =='Student'):
 		return redirect('student',user_data.id)
 	elif(typ == 'Club Admin'):
 		return redirect('Club_Admin',user_data.id)
@@ -60,7 +60,7 @@ def auth_from_api(token):
 	url = " https://serene-wildwood-35121.herokuapp.com/oauth/getDetails"
 	Payload = { 'token': token, 'secret': "1c7bfdbc537818fc991f5b014c37632c8a1724e224f3725c1138ccd649f4892e9bf4a1824ccdeffd66cd8df9e8741eb0887d8ae1679c8ccc3f9e6692590dba95" }
 	k = requests.post(url ,Payload)
-	details = json.loads(k.content)
+	details = json.loads(k.content.decode('utf-8'))
 	print(details)
 	return details
 '''def get_callback(request):
@@ -83,7 +83,9 @@ def auth_from_api(token):
 def student(request,s_id):
 
 	# Check if he is student actually
+	
 	usr = user.objects.get(id = s_id)
+	
 	
 	clubs_joined = set(club_registered_member.objects.filter(user_id = usr).values_list('club_id',flat=True))
 	clubs = set(club.objects.all().values_list('id',flat=True))
@@ -105,7 +107,7 @@ def student(request,s_id):
 	posts_media = post_media.objects.filter(post_id__in = post_ids)
 	post_comments = comment.objects.filter(post_id__in = post_ids).order_by('-comment_datetime')
 	
-	my_posts = post
+	
 	
 	#events_of_clubs_in = event.objects.filter(club_id__in = list(clubs_joined)).exclude(event_fill_status=F('event_limit'))
 	events_registered = list(event_registered_user.objects.filter(user_id = usr).values_list('event_id',flat=True))
@@ -145,9 +147,10 @@ def student(request,s_id):
 			if(opt.votes>mx):
 				mx = opt.votes
 				winner = opt.id
+				winner_name = opt.option
 			content += str(opt.option)+" : "+str(opt.votes)+"\n"
 		Poll.poll_winner = winner
-		content+="\n And the winner of the poll is : "+"option "+str(winner)+"."
+		content+="\n And the winner of the poll is : "+"option "+str(winner_name)+"."
 
 
 		new_notification = notification.objects.create(club_id = Club , notification_content=content)
@@ -161,8 +164,9 @@ def student(request,s_id):
 	poll_ids = list(polls.values_list('id',flat=True))
 	no_of_polls = polls.count()
 
-
+	usr = user.objects.get(id = s_id)
 	
+	rooms = room.objects.filter(status = True)
 	dic = {
 			"user":usr ,
 			"clubs_remain":clubs_remain,
@@ -184,6 +188,7 @@ def student(request,s_id):
 			"polls":polls,
 			"no_of_polls":no_of_polls,
 			}
+
 	return render(request,'CREW/student_index.html',dic)
 
 @csrf_protect
@@ -249,10 +254,13 @@ def events_registered(request):
 		usr = user.objects.get(id = s_id)
 		events_registered = event_registered_user.objects.filter(user_id = usr)
 		print(events_registered)
+		results = event.my_events(s_id)
+		print(results)
 		context = {
 				"stud":usr.id ,
 				"events_registered": events_registered,
 				"events":event.objects.all(),
+				"results" : results
 				#"events_no":len(events_registered),
 				}
 		return render(request,'CREW/events_student.html',context)
@@ -303,10 +311,13 @@ def postsUploaded(request,s_id):
 	usr = user.objects.get(id = s_id)
 	UserPosts = post.objects.filter(posted_by_id = usr)
 	print(UserPosts)
+	results = post.my_posts(s_id)
+	print(results)
 	context = {
 			"stud":usr.id ,
 			"UserPosts": UserPosts,
 			"clubs":club.objects.all(),
+			"results":results,
 			#"events_no":len(events_registered),
 			}
 	print(usr.id)
@@ -350,6 +361,9 @@ def DelPost(request,s_id,p_id):
 
 # Club Admin Functionalities
 def Club_Admin(request,ca_id):
+	today = datetime.now()
+	now = timezone.now()
+
 	usr = user.objects.get(id = ca_id)
 	for_club = (club_admin.objects.filter(user_id = usr).values_list('club_id',flat=True))[0]
 	Club = club.objects.get(id = for_club)
@@ -377,6 +391,10 @@ def Club_Admin(request,ca_id):
 	events = event.objects.filter(club_id__in = list(clubs_joined)).exclude(event_fill_status=F('event_limit'))
 	events = events.exclude(id__in = events_registered )
 	events = events.exclude(club_id = Club)
+	events = events.filter(Q(event_start_datetime__gte=today))
+	event_ids = list(events.values_list('id',flat=True))
+	events_media = event_media.objects.filter(event_id__in = event_ids)
+
 	event_ids = list(events.values_list('id',flat=True))
 	events_media = event_media.objects.filter(event_id__in = event_ids)
 
@@ -396,7 +414,17 @@ def Club_Admin(request,ca_id):
 	my_likes = likes.objects.filter(liked_user_id = usr)
 	events_organized = event.objects.filter(club_id = Club)
 
-	rooms = room.objects.all()
+	
+	EVENTS = event.objects.all()
+	for Event in EVENTS:
+		Room_id = Event.event_venue.id
+		Room = room.objects.get(id = Room_id)
+		if(Event.event_end_datetime < now):
+			Room.status = True
+		elif(Event.event_start_datetime <= now and now<= Event.event_end_datetime):
+			Room.status = False
+
+	rooms = room.objects.filter(status = True)
 	
 	dic = {
 			"user":usr ,
@@ -589,7 +617,15 @@ def Super_Admin(request,sa_id):
 	my_likes = likes.objects.filter(liked_user_id = usr)
 	
 
-	rooms = room.objects.all()
+	today = datetime.now()
+	EVENTS = event.objects.all()
+	for event in EVENTS:
+		Room_id = event.event_venue.id
+		Room = room.objects.get(id = Room_id)
+		if(event.event_end_datetime < today):
+			Room.status = True
+
+	rooms = room.objects.filter(status = True)
 	
 	dic = {
 			"user":usr ,
@@ -940,15 +976,19 @@ def create_post(request):
 
 def organize_event(request):
 	if request.method == 'POST':
+
 		if request.POST.get('ca_id'):
+			print("In organize event")
 			ca_id = request.POST.get('ca_id')
 			organizer = user.objects.get(id = ca_id)
 			r_no = int(request.POST.get('room'))
 			Room = room.objects.get(room_num = r_no)
-			Club_name = request.POST.get('Club')
-			Club = club.objects.get(club_name = Club_name)
+			Room.status = False
 			
+			Club_id = club_admin.objects.get(user_id = organizer).club_id.id
+			Club = club.objects.get(id = Club_id)
 
+			
 			name = request.POST.get('event_title')
 			description = request.POST.get('event_description')
 			start_datetime = request.POST.get('start_datetime')
@@ -967,8 +1007,7 @@ def organize_event(request):
 					media = event_media.objects.create(event_id=Event,media_type="Video",media=file)
 				elif(file.name.lower().endswith(('.pdf','.doc','.docx','.html','.htm','.txt'))):
 					media = event_media.objects.create(event_id=Event,media_type="Document",media=file)
-
-				
+			
 			
 			content =  name + " event is added."
 			new_notification = notification.objects.create(club_id = Club , notification_content=content)
@@ -976,7 +1015,6 @@ def organize_event(request):
 		
 			for usr in usersToBeNotified:
 				notification_user.objects.create(user_id = usr , notification_id = new_notification)
-
 
 			return redirect('Club_Admin',ca_id)
 	

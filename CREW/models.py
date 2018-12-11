@@ -39,9 +39,9 @@ class club_registered_member(models.Model):
 		return "Registration " + str(self.club_id) +  " user-id "+ str(self.user_id)		
 
 class room(models.Model):
-	timestamp = models.DateTimeField(default=timezone.now, blank=True)
 	room_num = models.IntegerField(default=0)
 	room_capacity =  models.IntegerField(default=1)
+	status = models.BooleanField(default=1)
 	def __str__(self):
 		return "Room No - " + str(self.room_num)
 
@@ -62,6 +62,27 @@ class event(models.Model):
 
 	def __str__(self):
 		return str(self.id)+" " + self.event_name
+	@staticmethod  
+	def my_events(user_id):
+        # create a cursor  
+		cur = connection.cursor()  
+        # execute the stored procedure passing in   
+        # search_string as a parameter  
+		cur.callproc('my_events', [user_id,])  
+        # grab the results  
+		columns = [col[0] for col in cur.description]
+		results= [
+            dict(zip(columns, row))
+            for row in cur.fetchall()
+        ]
+        #results = cur.fetchall()
+        # print("****")
+        # print(len(results)) 
+		cur.close()  
+
+        # wrap the results up into Document domain objects   
+		return results
+
 
 class event_registered_user(models.Model):
 	user_id = models.ForeignKey(user,on_delete=models.CASCADE)
@@ -92,6 +113,27 @@ class post(models.Model):
 	post_datetime = models.DateTimeField(default=timezone.now, blank=True)
 	def __str__(self):
 		return "Post :" + str(self.id) + ' ' + self.post_title
+
+	@staticmethod
+	def my_posts(user_id):
+        # create a cursor  
+		cur = connection.cursor()  
+        # execute the stored procedure passing in   
+        # search_string as a parameter  
+		cur.callproc('my_posts', [user_id,])  
+        # grab the results  
+		columns = [col[0] for col in cur.description]
+		results= [
+            dict(zip(columns, row))
+            for row in cur.fetchall()
+        ]
+        #results = cur.fetchall()
+        # print("****")
+        # print(len(results)) 
+		cur.close()  
+
+        # wrap the results up into Document domain objects   
+		return results
  
 class post_media(models.Model):
 	post_id = models.ForeignKey(post,on_delete=models.CASCADE)

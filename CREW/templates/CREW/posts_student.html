@@ -62,14 +62,11 @@
                 </tr>
               
               <tbody>
-                {% for i in UserPosts %}
-                  {% for j in clubs %}
-                     {% if i.club_id.id == j.id %} 
-                        <tr>
-                          
+                {% for i in results %} 
+                        <tr>                          
                           <td>{{i.id}}</td>
                           <td>{{i.post_title}}</td>
-                          <td>{{j.club_name}}</td>
+                          <td>{{i.club_name}}</td>
                           <td>{{i.post_datetime}}</td>
                           <td>
                              <a href="/Details/{{stud}}/{{i.id}}">
